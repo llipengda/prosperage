@@ -1,5 +1,5 @@
 import type Taro from '@tarojs/taro'
-import type { paths } from '@/api/schema'
+import type { paths } from '@/api/schemas'
 import { Expand } from '@/types/expand'
 import { Result } from '@/types/result'
 
