@@ -98,7 +98,7 @@ const update: Api<'/user/update', 'PUT'> = {
 const UserApi = {
   check: check.getData,
   deleteUser: deleteUser.getData,
-  info_1: info_1.getData,
+  info1: info_1.getData,
   info: info.getData,
   login: login.getData,
   update: update.getData

@@ -115,8 +115,8 @@ const share: Api<'/post/share', 'POST'> = {
 
 const PostApi = {
   addPost: addPost.getData,
-  $delete: $delete.getData,
-  getList_1: getList_1.getData,
+  delete: $delete.getData,
+  getList: getList_1.getData,
   getByUser: getByUser.getData,
   getDetail: getDetail.getData,
   getFriendsPost: getFriendsPost.getData,

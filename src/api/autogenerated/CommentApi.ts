@@ -84,10 +84,10 @@ const share_1: Api<'/comment/share', 'POST'> = {
 
 const CommentApi = {
   comment: comment.getData,
-  delete_1: delete_1.getData,
-  getList_2: getList_2.getData,
-  getDetail_2: getDetail_2.getData,
-  share_1: share_1.getData
+  delete: delete_1.getData,
+  getList: getList_2.getData,
+  getDetail: getDetail_2.getData,
+  share: share_1.getData
 }
 
 export default CommentApi

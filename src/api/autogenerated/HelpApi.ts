@@ -32,8 +32,8 @@ const getDetail_1: Api<'/help/getDetail', 'GET'> = {
 }
 
 const HelpApi = {
-  getSuggestions_1: getSuggestions_1.getData,
-  getDetail_1: getDetail_1.getData
+  getSuggestions: getSuggestions_1.getData,
+  getDetail: getDetail_1.getData
 }
 
 export default HelpApi

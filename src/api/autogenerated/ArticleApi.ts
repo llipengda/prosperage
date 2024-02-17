@@ -41,7 +41,7 @@ const getList_3: Api<'/article/get', 'GET'> = {
 
 const ArticleApi = {
   add: add.getData,
-  getList_3: getList_3.getData
+  getList: getList_3.getData
 }
 
 export default ArticleApi
