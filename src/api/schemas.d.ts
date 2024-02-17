@@ -69,10 +69,17 @@ export interface paths {
   }
   '/comment/add': {
     /**
-     * 评论
-     * @description 评论
+     * 评论 type 1为帖子 2为文章
+     * @description 评论 type 1为帖子 2为文章
      */
     post: operations['comment']
+  }
+  '/article/add': {
+    /**
+     * 添加文章
+     * @description 添加文章
+     */
+    post: operations['add']
   }
   '/apply/handle': {
     /**
@@ -144,15 +151,26 @@ export interface paths {
      */
     get: operations['getSuggestions']
   }
-  '/search/getUserList': {
+  '/search/users': {
     /**
      * 根据关键词搜索用户
      * @description 根据关键词搜索用户
      */
     get: operations['getUserList']
   }
-  '/search/getPosts': {
+  '/search/posts': {
+    /**
+     * 根据关键词搜索帖子
+     * @description 根据关键词搜索帖子
+     */
     get: operations['getPosts']
+  }
+  '/search/friendsPosts': {
+    /**
+     * 根据关键词搜索好友的帖子
+     * @description 根据关键词搜索好友的帖子
+     */
+    get: operations['getFriendsPosts']
   }
   '/reply/get': {
     /**
@@ -225,6 +243,13 @@ export interface paths {
      * @description 获取评论详情
      */
     get: operations['getDetail_2']
+  }
+  '/article/get': {
+    /**
+     * 获取文章列表
+     * @description 获取文章列表
+     */
+    get: operations['getList_3']
   }
   '/apply/getApplyList': {
     /**
@@ -592,9 +617,17 @@ export interface components {
       content?: string
       /**
        * Format: int64
-       * @description 帖子id
+       * @description 对象id
+       *  文章id或帖子id
        */
-      postId?: number
+      objId?: number
+      /**
+       * Format: int32
+       * @description 评论类型
+       *  1: 帖子
+       *  2: 文章
+       */
+      type?: number
     }
     /** @description 用户视角评论信息 */
     CommentResponse: {
@@ -605,9 +638,10 @@ export interface components {
       id?: number
       /**
        * Format: int64
-       * @description 帖子 ID
+       * @description 对象 ID
+       *  文章id或帖子id
        */
-      postId?: number
+      objId?: number
       /**
        * Format: int64
        * @description 楼层
@@ -660,6 +694,83 @@ export interface components {
        */
       code?: number
       data?: components['schemas']['CommentResponse']
+      /** @description 信息 */
+      msg?: string
+    }
+    /** @description 发布文章请求 */
+    AddArticleRequest: {
+      /**
+       * Format: int32
+       * @description 文章类型
+       */
+      type?: number
+      /** @description 文章标题 */
+      title?: string
+      /** @description 文章内容 */
+      content?: string
+      /** @description 图片 */
+      image?: string
+      /** @description 链接 */
+      link?: string
+    }
+    /** @description 用户视角帖子信息 */
+    ArticleResponse: {
+      /**
+       * Format: int64
+       * @description 文章 ID
+       */
+      id?: number
+      /**
+       * Format: date-time
+       * @description 创建时间
+       */
+      createTime?: string
+      /**
+       * Format: int32
+       * @description 文章类型
+       */
+      type?: number
+      /**
+       * Format: int64
+       * @description 发布用户 ID
+       */
+      userId?: number
+      /** @description 文章标题 */
+      title?: string
+      /** @description 文章内容 */
+      content?: string
+      /** @description 图片 */
+      image?: string
+      /** @description 链接 */
+      link?: string
+      /**
+       * Format: int64
+       * @description 点赞数
+       */
+      likes?: number
+      /**
+       * Format: int64
+       * @description 评论数
+       */
+      comments?: number
+      /**
+       * Format: int64
+       * @description 分享数
+       */
+      shares?: number
+      /** @description 发布用户名字 */
+      name?: string
+      /** @description 是否点赞 */
+      isLiked?: boolean
+    }
+    /** @description 通用返回结果 */
+    ResultArticleResponse: {
+      /**
+       * Format: int32
+       * @description 代码
+       */
+      code?: number
+      data?: components['schemas']['ArticleResponse']
       /** @description 信息 */
       msg?: string
     }
@@ -899,6 +1010,18 @@ export interface components {
       code?: number
       /** @description 返回数据 */
       data?: components['schemas']['CommentResponse'][]
+      /** @description 信息 */
+      msg?: string
+    }
+    /** @description 通用返回结果 */
+    ResultListArticleResponse: {
+      /**
+       * Format: int32
+       * @description 代码
+       */
+      code?: number
+      /** @description 返回数据 */
+      data?: components['schemas']['ArticleResponse'][]
       /** @description 信息 */
       msg?: string
     }
@@ -1202,8 +1325,8 @@ export interface operations {
     }
   }
   /**
-   * 评论
-   * @description 评论
+   * 评论 type 1为帖子 2为文章
+   * @description 评论 type 1为帖子 2为文章
    */
   comment: {
     /** @description 评论请求 */
@@ -1217,6 +1340,32 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['ResultCommentResponse']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          '*/*': components['schemas']['ResultObject']
+        }
+      }
+    }
+  }
+  /**
+   * 添加文章
+   * @description 添加文章
+   */
+  add: {
+    /** @description 添加文章请求 */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AddArticleRequest']
+      }
+    }
+    responses: {
+      /** @description 文章 */
+      200: {
+        content: {
+          '*/*': components['schemas']['ResultArticleResponse']
         }
       }
       /** @description Internal Server Error */
@@ -1529,16 +1678,53 @@ export interface operations {
       }
     }
   }
+  /**
+   * 根据关键词搜索帖子
+   * @description 根据关键词搜索帖子
+   */
   getPosts: {
     parameters: {
       query: {
+        /** @description 页码 */
         page: number
+        /** @description 页大小 */
         pageSize: number
+        /** @description 关键词 */
         keyword: string
       }
     }
     responses: {
-      /** @description OK */
+      /** @description 帖子列表 */
+      200: {
+        content: {
+          '*/*': components['schemas']['ResultListPostResponse']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          '*/*': components['schemas']['ResultObject']
+        }
+      }
+    }
+  }
+  /**
+   * 根据关键词搜索好友的帖子
+   * @description 根据关键词搜索好友的帖子
+   */
+  getFriendsPosts: {
+    parameters: {
+      query: {
+        /** @description 页码 */
+        page: number
+        /** @description 页大小 */
+        pageSize: number
+        /** @description 关键词 */
+        keyword: string
+      }
+    }
+    responses: {
+      /** @description 帖子列表 */
       200: {
         content: {
           '*/*': components['schemas']['ResultListPostResponse']
@@ -1791,8 +1977,10 @@ export interface operations {
         page: number
         /** @description 页大小 */
         pageSize: number
-        /** @description 帖子id */
-        postId: number
+        /** @description 帖子/文章id */
+        objId: number
+        /** @description 类型 */
+        type: number
       }
     }
     responses: {
@@ -1819,6 +2007,8 @@ export interface operations {
       query: {
         /** @description 评论id */
         commentId: number
+        /** @description 类型 */
+        type: number
       }
     }
     responses: {
@@ -1826,6 +2016,36 @@ export interface operations {
       200: {
         content: {
           '*/*': components['schemas']['ResultCommentResponse']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          '*/*': components['schemas']['ResultObject']
+        }
+      }
+    }
+  }
+  /**
+   * 获取文章列表
+   * @description 获取文章列表
+   */
+  getList_3: {
+    parameters: {
+      query: {
+        /** @description 页码 */
+        page: number
+        /** @description 页大小 */
+        pageSize: number
+        /** @description 文章类型 1每日新政 2规划指南 3投资教育 4行业动态 5研究报告 */
+        type: number
+      }
+    }
+    responses: {
+      /** @description 文章列表 */
+      200: {
+        content: {
+          '*/*': components['schemas']['ResultListArticleResponse']
         }
       }
       /** @description Internal Server Error */
