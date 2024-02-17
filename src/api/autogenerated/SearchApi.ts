@@ -62,8 +62,11 @@ const getUserList: Api<'/search/users', 'GET'> = {
 }
 
 const SearchApi = {
+  /** 根据关键词搜索好友的帖子 */
   getFriendsPosts: getFriendsPosts.getData,
+  /** 根据关键词搜索帖子 */
   getPosts: getPosts.getData,
+  /** 根据关键词搜索用户 */
   getUserList: getUserList.getData
 }
 

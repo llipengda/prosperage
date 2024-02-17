@@ -33,7 +33,9 @@ const getFriendList: Api<'/relation/getFriendList', 'GET'> = {
 }
 
 const RelationApi = {
+  /** 删除好友 */
   deleteFriend: deleteFriend.getData,
+  /** 获取好友列表 */
   getFriendList: getFriendList.getData
 }
 

@@ -32,7 +32,9 @@ const getDetail_1: Api<'/help/getDetail', 'GET'> = {
 }
 
 const HelpApi = {
+  /** 获取简要常见问题 */
   getSuggestions: getSuggestions_1.getData,
+  /** 获取常见问题详情 */
   getDetail: getDetail_1.getData
 }
 

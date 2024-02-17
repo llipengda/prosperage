@@ -96,11 +96,17 @@ const update: Api<'/user/update', 'PUT'> = {
 }
 
 const UserApi = {
+  /** 检查登录态 */
   check: check.getData,
+  /** 删除用户 */
   deleteUser: deleteUser.getData,
+  /** 获取指定id的用户信息 */
   info1: info_1.getData,
+  /** 获取用户信息 */
   info: info.getData,
+  /** 用户登录 */
   login: login.getData,
+  /** 用户更新信息 */
   update: update.getData
 }
 

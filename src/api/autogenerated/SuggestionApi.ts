@@ -38,7 +38,9 @@ const getSuggestions: Api<'/suggestion/get', 'GET'> = {
 }
 
 const SuggestionApi = {
+  /** 添加意见反馈 */
   addSuggestion: addSuggestion.getData,
+  /** 获取意见反馈列表 */
   getSuggestions: getSuggestions.getData
 }
 

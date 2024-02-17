@@ -34,7 +34,9 @@ const unlike: Api<'/like/undo', 'POST'> = {
 }
 
 const LikeApi = {
+  /** 点赞 */
   like: like.getData,
+  /** 取消点赞 */
   unlike: unlike.getData
 }
 

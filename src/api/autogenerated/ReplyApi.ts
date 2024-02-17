@@ -55,8 +55,11 @@ const getList: Api<'/reply/get', 'GET'> = {
 }
 
 const ReplyApi = {
+  /** 添加回复 */
   addReply: addReply.getData,
+  /** 删除回复 */
   delReply: delReply.getData,
+  /** 获取回复列表 */
   getList: getList.getData
 }
 

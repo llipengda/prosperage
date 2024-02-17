@@ -46,8 +46,11 @@ const handle: Api<'/apply/handle', 'POST'> = {
 }
 
 const ApplyApi = {
+  /** 此用户申请添加指定用户为好友 */
   apply: apply.getData,
+  /** 获取好友申请列表 */
   getApplyList: getApplyList.getData,
+  /** 处理好友申请 */
   handle: handle.getData
 }
 

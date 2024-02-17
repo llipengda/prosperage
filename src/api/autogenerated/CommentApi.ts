@@ -83,10 +83,15 @@ const share_1: Api<'/comment/share', 'POST'> = {
 }
 
 const CommentApi = {
+  /** 评论 type 1为帖子 2为文章 */
   comment: comment.getData,
+  /** 删除评论 */
   delete: delete_1.getData,
+  /** 获取评论列表 */
   getList: getList_2.getData,
+  /** 获取评论详情 */
   getDetail: getDetail_2.getData,
+  /** 分享评论 */
   share: share_1.getData
 }
 

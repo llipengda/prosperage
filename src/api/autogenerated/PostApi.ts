@@ -114,12 +114,19 @@ const share: Api<'/post/share', 'POST'> = {
 }
 
 const PostApi = {
+  /** 添加帖子 */
   addPost: addPost.getData,
   delete: $delete.getData,
+  /** 获取帖子列表 */
   getList: getList_1.getData,
+  /** 获取指定用户的帖子列表
+ 用于查看个人主页 */
   getByUser: getByUser.getData,
+  /** 获取帖子详情 */
   getDetail: getDetail.getData,
+  /** 获取好友的帖子列表 */
   getFriendsPost: getFriendsPost.getData,
+  /** 分享帖子 */
   share: share.getData
 }
 

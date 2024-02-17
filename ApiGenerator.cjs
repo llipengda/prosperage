@@ -200,9 +200,9 @@ class ApiGenerator {
   /**
    * Get parameters of a operation
    * @param {string} operationName
-   * @returns {[{query: string[], path: string[], body: string[]}, boolean] as const}
+   * @returns {[{query: string[], path: string[], body: string[]}, boolean, string?] as const} parameters, returnVoid, comment
    */
-  getParamsAndCheckReturn(operationName) {
+  analysisOperation(operationName) {
     /**
      * @type {{query: string[], path: string[], body: string[]}}
      */
@@ -212,7 +212,12 @@ class ApiGenerator {
       body: []
     }
 
-    let noreturn = false
+    let returnVoid = false
+
+    /**
+     * @type {string?}
+     */
+    let comment
 
     /**
      * @type {ts.SourceFile}
@@ -229,6 +234,9 @@ class ApiGenerator {
           child.name.text !== operationName
         ) {
           return
+        }
+        if (child.jsDoc) {
+          comment = `${child.jsDoc[0].comment}`
         }
         child.forEachChild(c => {
           if (!ts.isTypeLiteralNode(c)) {
@@ -285,17 +293,30 @@ class ApiGenerator {
                     if (
                       !ts.isPropertySignature(content) ||
                       !ts.isStringLiteral(content.name) ||
-                      content.name.text.split('/').length !== 2 ||
-                      !ts.isIndexedAccessTypeNode(content.type)
+                      content.name.text.split('/').length !== 2
                     ) {
                       return
                     }
-                    content.type?.indexType?.forEachChild(it => {
-                      if (!ts.isStringLiteral(it)) {
-                        return
-                      }
-                      res.body = this.getSchema(it.text)
-                    })
+                    if (ts.isIndexedAccessTypeNode(content.type)) {
+                      content.type?.indexType?.forEachChild(it => {
+                        if (!ts.isStringLiteral(it)) {
+                          return
+                        }
+                        res.body = this.getSchema(it.text)
+                      })
+                    } else if (ts.isTypeLiteralNode(content.type)) {
+                      /**
+                       * @type {string[]}
+                       */
+                      const params = []
+                      content.type.forEachChild(pa => {
+                        if (!ts.isPropertySignature(pa)) {
+                          return
+                        }
+                        params.push(pa.name.text)
+                      })
+                      res.body = params
+                    }
                   })
                 })
               })
@@ -315,7 +336,7 @@ class ApiGenerator {
                     return
                   }
                   if (responseType?.type.kind === ts.SyntaxKind.NeverKeyword) {
-                    noreturn = true
+                    returnVoid = true
                   }
                 })
               })
@@ -325,7 +346,7 @@ class ApiGenerator {
       })
     })
 
-    return [res, noreturn]
+    return [res, returnVoid, comment]
   }
 
   /**
@@ -334,9 +355,9 @@ class ApiGenerator {
    * @param {string} path
    * @param {string} httpOperation
    * @param {{query: string[], path: string[], body: string[]}} params
-   * @param {boolean} noreturn
+   * @param {boolean} returnVoid
    */
-  generateMethodCode(methodName, path, httpOperation, params, noreturn) {
+  generateMethodCode(methodName, path, httpOperation, params, returnVoid) {
     if (this.bannedNames.includes(methodName)) {
       methodName = '$' + methodName
     }
@@ -354,11 +375,11 @@ class ApiGenerator {
 
     const paramsLiteral = hasParams ? 'params' : ''
 
-    const getResReturnKeyWord = noreturn ? '' : 'return '
+    const getResReturnKeyWord = returnVoid ? '' : 'return '
 
-    const getDataReturnStatement = noreturn ? '' : 'return res.data.data'
+    const getDataReturnStatement = returnVoid ? '' : 'return res.data.data'
 
-    const resAssignment = noreturn ? '' : 'const res = '
+    const resAssignment = returnVoid ? '' : 'const res = '
 
     const getResParams = `${
       hasParams
@@ -403,12 +424,13 @@ class ApiGenerator {
   }
 
   /**
-   *
+   * Generate file
    * @param {string} apiName
    * @param {string[]} methodNames
    * @param {string} methodCode
+   * @param {{[methodName: string]: string}} commentMap
    */
-  async generateFile(apiName, methodNames, methodCode) {
+  async generateFile(apiName, methodNames, methodCode, commentMap) {
     const names = methodNames.map(name => {
       if (name.match(/^.+_\d+$/)) {
         let replaced = name.replace(/_\d+$/, '')
@@ -425,7 +447,14 @@ class ApiGenerator {
     })
 
     const apiNameDeclarationCode = names
-      .map(name => `${name.new}: ${name.original}.getData`)
+      .map(
+        name => `${
+          commentMap[name.original]
+            ? `/** ${commentMap[name.original]} */\n`
+            : ''
+        }${name.new}: ${name.original}.getData
+      `
+      )
       .join(',\n')
 
     const code = `
@@ -449,6 +478,9 @@ class ApiGenerator {
     )
   }
 
+  /**
+   * Generate the index file
+   */
   async generateIndex() {
     const apis = Object.keys(this.getApiDict())
 
@@ -474,18 +506,23 @@ class ApiGenerator {
     await this.generateSchemas()
     const apiDict = this.getApiDict()
     Object.entries(apiDict).forEach(async ([apiName, apis]) => {
+      /**
+       * @type {{[methodName: string]: string}}
+       */
+      const commentMap = {}
       const code = apis
         .map(({ path, methods }) =>
           methods
             .map(({ httpOperation, methodName }) => {
-              const [params, noreturn] =
-                this.getParamsAndCheckReturn(methodName)
+              const [params, returnVoid, comment] =
+                this.analysisOperation(methodName)
+              commentMap[methodName] = comment
               return this.generateMethodCode(
                 methodName,
                 path,
                 httpOperation,
                 params,
-                noreturn
+                returnVoid
               )
             })
             .join('\n')
@@ -494,7 +531,7 @@ class ApiGenerator {
       const apiMethods = apis.flatMap(({ methods }) =>
         methods.map(({ methodName }) => methodName)
       )
-      await this.generateFile(apiName, apiMethods, code)
+      await this.generateFile(apiName, apiMethods, code, commentMap)
     })
     await this.generateIndex()
   }

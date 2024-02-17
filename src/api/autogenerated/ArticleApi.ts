@@ -40,7 +40,9 @@ const getList_3: Api<'/article/get', 'GET'> = {
 }
 
 const ArticleApi = {
+  /** 添加文章 */
   add: add.getData,
+  /** 获取文章列表 */
   getList: getList_3.getData
 }
 
