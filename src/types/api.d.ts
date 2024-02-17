@@ -1,11 +1,13 @@
 import type Taro from '@tarojs/taro'
 import type { paths } from '@/api/schemas'
-import { Expand } from '@/types/expand'
-import { Result } from '@/types/result'
+import type { Expand } from '@/types/expand'
+import type { Result } from '@/types/result'
 
 type _HTTPOperations = 'get' | 'post' | 'put' | 'delete' | 'patch'
 
-type HTTPOperations = Expand<Uppercase<_HTTPOperations> | _HTTPOperations>
+export type HTTPOperations = Uppercase<_HTTPOperations>
+
+export type Paths = Expand<keyof paths>
 
 type HTTPStatusCode =
   | '200'
@@ -24,7 +26,7 @@ type NoneNeverKeys<T> = {
   : never
 
 type _Params<
-  TPath extends keyof paths,
+  TPath extends Paths,
   TOperation extends HTTPOperations
 > = paths[TPath] extends {
   [key in Lowercase<TOperation>]: {
@@ -43,20 +45,18 @@ type _Params<
     }
   : never
 
-export type Params<
-  TPath extends keyof paths,
-  TOperation extends HTTPOperations
-> = NoneNeverKeys<_Params<TPath, TOperation>> extends never
-  ? never
-  : Expand<
-      Pick<
-        _Params<TPath, TOperation>,
-        NoneNeverKeys<_Params<TPath, TOperation>>
+export type Params<TPath extends Paths, TOperation extends HTTPOperations> =
+  NoneNeverKeys<_Params<TPath, TOperation>> extends never
+    ? never
+    : Expand<
+        Pick<
+          _Params<TPath, TOperation>,
+          NoneNeverKeys<_Params<TPath, TOperation>>
+        >
       >
-    >
 
 export type Response<
-  TPath extends keyof paths,
+  TPath extends Paths,
   TOperation extends HTTPOperations,
   TCode extends HTTPStatusCode = '200'
 > = paths[TPath] extends {
@@ -76,26 +76,7 @@ export type Response<
   : never
 
 export type Api<
-  TPath extends keyof paths,
-  TOperation extends HTTPOperations,
-  TCode extends HTTPStatusCode = '200'
-> = [Params<TPath, TOperation>, Response<TPath, TOperation, TCode>] extends [
-  infer P,
-  infer R
-]
-  ? P extends never
-    ? () => Promise<R>
-    : P extends {
-        query?: infer Q
-        path?: infer Pa
-        body?: infer B
-      }
-    ? (params: Q & Pa & B) => Promise<R>
-    : never
-  : never
-
-export type InternalApi<
-  TPath extends keyof paths,
+  TPath extends Paths,
   TOperation extends HTTPOperations,
   TCode extends HTTPStatusCode = '200'
 > = [Params<TPath, TOperation>, Response<TPath, TOperation, TCode>] extends [
@@ -103,8 +84,30 @@ export type InternalApi<
   infer R
 ]
   ? Taro.request.SuccessCallbackResult<Result<R>> extends infer S
-    ? P extends never
-      ? () => Promise<S>
-      : (params: P) => Promise<S>
+    ? [P] extends [never]
+      ? [R] extends [never]
+        ? {
+            getRes: () => Promise<void>
+            getData: () => Promise<void>
+          }
+        : {
+            getRes: () => Promise<S>
+            getData: () => Promise<R>
+          }
+      : P extends {
+            query?: infer Q
+            path?: infer Pa
+            body?: infer B
+          }
+        ? [R] extends [never]
+          ? {
+              getRes: (params: P) => Promise<void>
+              getData: (params: Q & Pa & B) => Promise<void>
+            }
+          : {
+              getRes: (params: P) => Promise<S>
+              getData: (params: Q & Pa & B) => Promise<R>
+            }
+        : never
     : never
   : never
