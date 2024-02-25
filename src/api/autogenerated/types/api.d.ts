@@ -1,14 +1,15 @@
 import type Taro from '@tarojs/taro'
-import type { paths } from '@/api/schemas'
-import type { Expand } from '@/types/expand'
-import type { Result } from '@/types/result'
+import type { paths } from './schemas'
 
+type Expand<T> = T extends object
+  ? T extends infer O
+    ? { [K in keyof O]: Expand<O[K]> }
+    : never
+  : T
+export type Result<T> = { code: number; data: T; msg: string }
 type _HTTPOperations = 'get' | 'post' | 'put' | 'delete' | 'patch'
-
 export type HTTPOperations = Uppercase<_HTTPOperations>
-
 export type Paths = Expand<keyof paths>
-
 type HTTPStatusCode =
   | '200'
   | '201'
@@ -18,13 +19,11 @@ type HTTPStatusCode =
   | '403'
   | '404'
   | '500'
-
 type NoneNeverKeys<T> = {
   [P in keyof T]: T[P] extends never ? never : P
 } extends { [key in keyof T]: infer U }
   ? U
   : never
-
 type _Params<
   TPath extends Paths,
   TOperation extends HTTPOperations
@@ -44,7 +43,6 @@ type _Params<
         : never
     }
   : never
-
 export type Params<TPath extends Paths, TOperation extends HTTPOperations> =
   NoneNeverKeys<_Params<TPath, TOperation>> extends never
     ? never
@@ -54,7 +52,6 @@ export type Params<TPath extends Paths, TOperation extends HTTPOperations> =
           NoneNeverKeys<_Params<TPath, TOperation>>
         >
       >
-
 export type Response<
   TPath extends Paths,
   TOperation extends HTTPOperations,
@@ -74,7 +71,6 @@ export type Response<
       : never
     : never
   : never
-
 export type Api<
   TPath extends Paths,
   TOperation extends HTTPOperations,
@@ -86,19 +82,9 @@ export type Api<
   ? Taro.request.SuccessCallbackResult<Result<R>> extends infer S
     ? [P] extends [never]
       ? [R] extends [never]
-        ? {
-            getRes: () => Promise<void>
-            getData: () => Promise<void>
-          }
-        : {
-            getRes: () => Promise<S>
-            getData: () => Promise<R>
-          }
-      : P extends {
-            query?: infer Q
-            path?: infer Pa
-            body?: infer B
-          }
+        ? { getRes: () => Promise<void>; getData: () => Promise<void> }
+        : { getRes: () => Promise<S>; getData: () => Promise<R> }
+      : P extends { query?: infer Q; path?: infer Pa; body?: infer B }
         ? [R] extends [never]
           ? {
               getRes: (params: P) => Promise<void>

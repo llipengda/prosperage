@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Api } from '@/types/api'
+import { Api } from './types/api'
 
 const like: Api<'/like/do', 'POST'> = {
   async getRes(params) {
@@ -17,11 +17,11 @@ const like: Api<'/like/do', 'POST'> = {
   }
 }
 
-const unlike: Api<'/like/undo', 'POST'> = {
+const unlike: Api<'/like/undo', 'DELETE'> = {
   async getRes(params) {
     return Taro.request({
       url: `/like/undo`,
-      method: 'POST',
+      method: 'DELETE',
       data: params.body
     })
   },

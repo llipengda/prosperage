@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Api } from '@/types/api'
+import { Api } from './types/api'
 
 const test200: Api<'/test/200', 'GET'> = {
   async getRes() {

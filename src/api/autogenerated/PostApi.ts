@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Api } from '@/types/api'
+import { Api } from './types/api'
 
 const addPost: Api<'/post/add', 'POST'> = {
   async getRes(params) {
@@ -70,7 +70,7 @@ const getByUser: Api<'/post/getByUser', 'GET'> = {
   }
 }
 
-const getDetail: Api<'/post/getDetail', 'GET'> = {
+const getDetail_1: Api<'/post/getDetail', 'GET'> = {
   async getRes(params) {
     return Taro.request({
       url: `/post/getDetail`,
@@ -79,7 +79,7 @@ const getDetail: Api<'/post/getDetail', 'GET'> = {
     })
   },
   async getData(params) {
-    const res = await getDetail.getRes({ query: { postId: params.postId } })
+    const res = await getDetail_1.getRes({ query: { postId: params.postId } })
     return res.data.data
   }
 }
@@ -100,11 +100,11 @@ const getFriendsPost: Api<'/post/getFriendsPost', 'GET'> = {
   }
 }
 
-const share: Api<'/post/share', 'POST'> = {
+const share: Api<'/post/share', 'PUT'> = {
   async getRes(params) {
     return Taro.request({
       url: `/post/share?postId=${params.query.postId}`,
-      method: 'POST'
+      method: 'PUT'
     })
   },
   async getData(params) {
@@ -123,7 +123,7 @@ const PostApi = {
  用于查看个人主页 */
   getByUser: getByUser.getData,
   /** 获取帖子详情 */
-  getDetail: getDetail.getData,
+  getDetail: getDetail_1.getData,
   /** 获取好友的帖子列表 */
   getFriendsPost: getFriendsPost.getData,
   /** 分享帖子 */

@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Api } from '@/types/api'
+import { Api } from './types/api'
 
 const uploadImage: Api<'/image', 'POST'> = {
   async getRes(params) {

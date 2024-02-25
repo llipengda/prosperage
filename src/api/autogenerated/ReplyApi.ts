@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Api } from '@/types/api'
+import { Api } from './types/api'
 
 const addReply: Api<'/reply/add', 'POST'> = {
   async getRes(params) {

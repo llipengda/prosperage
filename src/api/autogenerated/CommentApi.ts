@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Api } from '@/types/api'
+import { Api } from './types/api'
 
 const comment: Api<'/comment/add', 'POST'> = {
   async getRes(params) {
@@ -17,7 +17,7 @@ const comment: Api<'/comment/add', 'POST'> = {
   }
 }
 
-const delete_1: Api<'/comment/del', 'DELETE'> = {
+const delete_2: Api<'/comment/del', 'DELETE'> = {
   async getRes(params) {
     return Taro.request({
       url: `/comment/del?commentId=${params.query.commentId}`,
@@ -25,7 +25,7 @@ const delete_1: Api<'/comment/del', 'DELETE'> = {
     })
   },
   async getData(params) {
-    const res = await delete_1.getRes({
+    const res = await delete_2.getRes({
       query: { commentId: params.commentId }
     })
     return res.data.data
@@ -53,7 +53,7 @@ const getList_2: Api<'/comment/get', 'GET'> = {
   }
 }
 
-const getDetail_2: Api<'/comment/getDetail', 'GET'> = {
+const getDetail_3: Api<'/comment/getDetail', 'GET'> = {
   async getRes(params) {
     return Taro.request({
       url: `/comment/getDetail`,
@@ -62,18 +62,18 @@ const getDetail_2: Api<'/comment/getDetail', 'GET'> = {
     })
   },
   async getData(params) {
-    const res = await getDetail_2.getRes({
+    const res = await getDetail_3.getRes({
       query: { commentId: params.commentId, type: params.type }
     })
     return res.data.data
   }
 }
 
-const share_1: Api<'/comment/share', 'POST'> = {
+const share_1: Api<'/comment/share', 'PUT'> = {
   async getRes(params) {
     return Taro.request({
       url: `/comment/share?commentId=${params.query.commentId}`,
-      method: 'POST'
+      method: 'PUT'
     })
   },
   async getData(params) {
@@ -86,11 +86,11 @@ const CommentApi = {
   /** 评论 type 1为帖子 2为文章 */
   comment: comment.getData,
   /** 删除评论 */
-  delete: delete_1.getData,
+  delete: delete_2.getData,
   /** 获取评论列表 */
   getList: getList_2.getData,
   /** 获取评论详情 */
-  getDetail: getDetail_2.getData,
+  getDetail: getDetail_3.getData,
   /** 分享评论 */
   share: share_1.getData
 }

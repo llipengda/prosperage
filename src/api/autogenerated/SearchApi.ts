@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Api } from '@/types/api'
+import { Api } from './types/api'
 
 const getFriendsPosts: Api<'/search/friendsPosts', 'GET'> = {
   async getRes(params) {

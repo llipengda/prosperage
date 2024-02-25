@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Api } from '@/types/api'
+import { Api } from './types/api'
 
 const getSuggestions_1: Api<'/help/get', 'GET'> = {
   async getRes(params) {
@@ -17,7 +17,7 @@ const getSuggestions_1: Api<'/help/get', 'GET'> = {
   }
 }
 
-const getDetail_1: Api<'/help/getDetail', 'GET'> = {
+const getDetail_2: Api<'/help/getDetail', 'GET'> = {
   async getRes(params) {
     return Taro.request({
       url: `/help/getDetail`,
@@ -26,7 +26,7 @@ const getDetail_1: Api<'/help/getDetail', 'GET'> = {
     })
   },
   async getData(params) {
-    const res = await getDetail_1.getRes({ query: { id: params.id } })
+    const res = await getDetail_2.getRes({ query: { id: params.id } })
     return res.data.data
   }
 }
@@ -35,7 +35,7 @@ const HelpApi = {
   /** 获取简要常见问题 */
   getSuggestions: getSuggestions_1.getData,
   /** 获取常见问题详情 */
-  getDetail: getDetail_1.getData
+  getDetail: getDetail_2.getData
 }
 
 export default HelpApi

@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Api } from '@/types/api'
+import { Api } from './types/api'
 
 const apply: Api<'/apply/do', 'POST'> = {
   async getRes(params) {
@@ -30,11 +30,11 @@ const getApplyList: Api<'/apply/getApplyList', 'GET'> = {
   }
 }
 
-const handle: Api<'/apply/handle', 'POST'> = {
+const handle: Api<'/apply/handle', 'PUT'> = {
   async getRes(params) {
     return Taro.request({
       url: `/apply/handle?applyId=${params.query.applyId}&decision=${params.query.decision}`,
-      method: 'POST'
+      method: 'PUT'
     })
   },
   async getData(params) {

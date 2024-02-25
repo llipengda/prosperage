@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Api } from '@/types/api'
+import { Api } from './types/api'
 
 const addSuggestion: Api<'/suggestion/add', 'POST'> = {
   async getRes(params) {
@@ -14,7 +14,8 @@ const addSuggestion: Api<'/suggestion/add', 'POST'> = {
       body: {
         title: params.title,
         content: params.content,
-        image: params.image
+        image: params.image,
+        type: params.type
       }
     })
     return res.data.data
@@ -31,7 +32,7 @@ const getSuggestions: Api<'/suggestion/get', 'GET'> = {
   },
   async getData(params) {
     const res = await getSuggestions.getRes({
-      query: { page: params.page, pageSize: params.pageSize }
+      query: { type: params.type, page: params.page, pageSize: params.pageSize }
     })
     return res.data.data
   }
@@ -40,7 +41,7 @@ const getSuggestions: Api<'/suggestion/get', 'GET'> = {
 const SuggestionApi = {
   /** 添加意见反馈 */
   addSuggestion: addSuggestion.getData,
-  /** 获取意见反馈列表 */
+  /** 获取建议列表 */
   getSuggestions: getSuggestions.getData
 }
 
