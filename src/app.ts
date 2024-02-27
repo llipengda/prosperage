@@ -8,6 +8,7 @@ function App({ children }: PropsWithChildren<any>) {
     Taro.addInterceptor(Taro.interceptors.logInterceptor)
     Taro.addInterceptor(Taro.interceptors.timeoutInterceptor)
     Taro.addInterceptor(inteprecitor)
+
     console.log('App launched.')
   })
 
