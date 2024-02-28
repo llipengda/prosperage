@@ -1,7 +1,13 @@
+const pages = [
+  'pages/login/login',
+  'pages/login/receiveCode/receiveCode',
+  'pages/home/home',
+] as const
+
+export type Page = (typeof pages)[number]
+
 export default defineAppConfig({
-  pages: [
-    'pages/index/index'
-  ],
+  pages: pages.map(p => p),
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',

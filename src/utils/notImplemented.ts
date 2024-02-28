@@ -1,9 +1,9 @@
 import Taro from '@tarojs/taro'
 
-export default function notImplemented() {
+const notImplemented = () =>
   Taro.showModal({
     title: '提示',
-    content: '此功能尚不可用',
-    showCancel: false
+    content: '暂不支持此功能'
   })
-}
+
+export default notImplemented

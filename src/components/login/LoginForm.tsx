@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   type CommonEventFunction,
   Image,
@@ -10,21 +10,18 @@ import {
 } from '@tarojs/components'
 import { UserApi } from '@/api'
 import arrowDown from '@/assets/arrow_down.svg'
-import logoEn from '@/assets/logo_en.svg'
-import logoCn from '@/assets/logo_zh.svg'
 import { CALLING_CODES } from '@/common/constants'
-import useLoginStore from '@/store/loginStore'
+import useLoginStore from '@/stores/loginStore'
+import errorModal from '@/utils/errorModal'
 import notImplemented from '@/utils/notImplemented'
 import throwError from '@/utils/throwError'
 
-const Logo = () => (
-  <Fragment>
-    <Image src={logoEn} className='w-4/5' mode='widthFix' />
-    <Image src={logoCn} className='w-[30%] ml-[-50%] mt-2' mode='widthFix' />
-  </Fragment>
-)
+type LoginFormProps = {
+  onWechatLogin: () => void
+  onPhoneLogin: () => void
+}
 
-const LoginForm = () => {
+const LoginForm = ({ onWechatLogin, onPhoneLogin }: LoginFormProps) => {
   const [phone, setPhone] = useState('')
   const [callingCode, setCallingCode] = useState('+86')
   const [lastPickerSelected, setLastPickerSelected] = useState(
@@ -45,11 +42,18 @@ const LoginForm = () => {
 
   const handleClickPrivacyPolicy = notImplemented
 
-  const handleClickContinue = () => {
-    if (phone) {
+  const handleClickContinue = async () => {
+    if (phone && phone.length) {
+      if (callingCode === '+86' && phone.length !== 11) {
+        await errorModal('请输入正确的电话号码')
+        return
+      }
       setCompletePhone(callingCode + phone)
+    } else {
+      await errorModal('请输入正确的电话号码')
+      return
     }
-    notImplemented()
+    onPhoneLogin()
   }
 
   const handleWechatLogin = async () => {
@@ -57,6 +61,7 @@ const LoginForm = () => {
       (await UserApi.login())?.token ??
       throwError('No token returned from login.')
     setToken(token)
+    onWechatLogin()
   }
 
   return (
@@ -122,23 +127,4 @@ const LoginForm = () => {
   )
 }
 
-export default function Login() {
-  const [gradient, setGradient] = useState(true)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setGradient(true)
-    }, 3000)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  return (
-    <View
-      className={`${gradient ? 'bg-gradient-to-b from-primary to-50%' : 'bg-primary'} w-screen h-screen flex flex-col items-center justify-center transition-all duration-500 ease-in-out`}
-    >
-      {/* <Logo /> */}
-      <LoginForm />
-    </View>
-  )
-}
+export default LoginForm
