@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import Taro from '@tarojs/taro'
+import { useState } from 'react'
+import Taro, { useLoad, useUnload } from '@tarojs/taro'
 import { type Page } from '@/app.config'
 
 export const navigate = (url: string) => Taro.navigateTo({ url })
@@ -14,13 +14,17 @@ type NavigateProps = {
 }
 
 export default function Navigate({ to, delay = 0 }: NavigateProps) {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate(to)
-    }, delay)
+  const [timer, setTimer] = useState<NodeJS.Timeout>()
 
-    return () => clearTimeout(timer)
-  }, [to, delay])
+  useLoad(() => {
+    setTimer(
+      setTimeout(() => {
+        navigate(to)
+      }, delay)
+    )
+  })
+
+  useUnload(() => clearTimeout(timer))
 
   return <></>
 }

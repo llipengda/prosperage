@@ -11,16 +11,20 @@ export default function Login() {
   const [showLoginForm, setShowLoginForm] = useState(true)
   const [showReceiveCode, setShowReceiveCode] = useState(false)
 
+  const [timer, setTimer] = useState<NodeJS.Timeout>()
+
   const token = useLoginStore(state => state.token)
 
-  let timer: NodeJS.Timeout
   Taro.useLoad(() => {
     const needLogin = !token
-    timer = setTimeout(() => {
-      setShowLogo(false)
-      setShowLoginForm(needLogin)
-    }, 800)
+    setTimer(
+      setTimeout(() => {
+        setShowLogo(false)
+        setShowLoginForm(needLogin)
+      }, 800)
+    )
   })
+
   Taro.useUnload(() => clearTimeout(timer))
 
   const handleWechatLogin = () => {
@@ -44,9 +48,9 @@ export default function Login() {
           onPhoneLogin={handlePhoneLogin}
         />
       ) : showReceiveCode ? (
-        <Navigate to='/pages/login/receiveCode/receiveCode' delay={100} />
+        <Navigate to='/pages/login/receiveCode/receiveCode' delay={200} />
       ) : (
-        <Navigate to='/pages/home/home' delay={100} />
+        <Navigate to='/pages/home/home' delay={200} />
       )}
     </View>
   )
