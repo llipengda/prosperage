@@ -1,7 +1,7 @@
 const pages = [
   'pages/login/login',
-  'pages/login/receiveCode/receiveCode',
-  'pages/home/home',
+  'pages/login/code/code',
+  'pages/index/index'
 ] as const
 
 export type Page = (typeof pages)[number]
@@ -13,5 +13,6 @@ export default defineAppConfig({
     navigationBarBackgroundColor: '#fff',
     navigationBarTitleText: 'WeChat',
     navigationBarTextStyle: 'black'
-  }
+  },
+  usingComponents: {}
 })

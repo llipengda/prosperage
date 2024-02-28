@@ -382,7 +382,7 @@ class ApiGenerator {
     const mapper = q => `${q}: params.${q}`
 
     /**
-     * Seprate parameters by comma
+     * Separate parameters by comma
      * @param {any[]} p
      */
     const sep = p => p.map(mapper).join(', ')

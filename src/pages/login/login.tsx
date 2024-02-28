@@ -27,6 +27,13 @@ export default function Login() {
 
   Taro.useUnload(() => clearTimeout(timer))
 
+  Taro.useDidHide(() => {
+    if (!showReceiveCode) return
+    setShowLogo(false)
+    setShowLoginForm(true)
+    setShowReceiveCode(false)
+  })
+
   const handleWechatLogin = () => {
     setShowLoginForm(false)
   }
@@ -48,9 +55,9 @@ export default function Login() {
           onPhoneLogin={handlePhoneLogin}
         />
       ) : showReceiveCode ? (
-        <Navigate to='/pages/login/receiveCode/receiveCode' delay={200} />
+        <Navigate to='/pages/login/code/code' delay={200} />
       ) : (
-        <Navigate to='/pages/home/home' delay={200} />
+        <Navigate to='/pages/index/index?tab=home' delay={200} />
       )}
     </View>
   )

@@ -1,5 +1,5 @@
 import { View } from '@tarojs/components'
 
-export default function home() {
+export default function Home() {
   return <View>Home</View>
 }

@@ -10,7 +10,7 @@ import {
 } from '@tarojs/components'
 import { UserApi } from '@/api'
 import arrowDown from '@/assets/arrow_down.svg'
-import { CALLING_CODES } from '@/common/constants'
+import { CALLING_CODES } from '@/common/callingCodes'
 import useLoginStore from '@/stores/loginStore'
 import errorModal from '@/utils/errorModal'
 import notImplemented from '@/utils/notImplemented'
