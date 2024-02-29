@@ -57,7 +57,7 @@ export default function Login() {
       ) : showReceiveCode ? (
         <Navigate to='/pages/login/code/code' delay={200} />
       ) : (
-        <Navigate to='/pages/index/index?tab=home' delay={200} />
+        <Navigate to='/pages/index/index?tab=home' delay={200} redirect />
       )}
     </View>
   )
