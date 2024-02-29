@@ -148,7 +148,7 @@ const ResponseApi = {
   /** 获取用户最近已完成的问卷作答记录 */
   getLatest: getLatest.getData,
   /** 获取问卷包含的所有章节 */
-  get: get_1.getData,
+  get1: get_1.getData,
   /** 获取问卷作答结果 */
   getResult: getResult.getData,
   /** 开始作答问卷 */

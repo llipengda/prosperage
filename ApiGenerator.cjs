@@ -452,6 +452,7 @@ class ApiGenerator {
         while (methodNames.find(n => n === replaced)) {
           replaced = replaced + i++
         }
+        methodNames[methodNames.indexOf(name)] = replaced
         return { original: name, new: replaced }
       }
       if (this.#bannedNames.includes(name)) {
