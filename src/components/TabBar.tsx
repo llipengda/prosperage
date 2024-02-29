@@ -7,7 +7,7 @@ const TabBar = React.memo(() => {
   const { active, setActive } = useTabBarStore()
 
   return (
-    <View className='fixed bottom-[env(safe-area-inset-bottom)] w-screen bg-white flex flex-row items-center justify-around z-10'>
+    <View className='fixed bottom-0 pb-[env(safe-area-inset-bottom)] w-screen bg-white flex flex-row items-center justify-around z-10 h-[calc(142px+env(safe-area-inset-bottom))]'>
       {TAB_BAR_LIST.map((item, index) => (
         <View
           key={index}

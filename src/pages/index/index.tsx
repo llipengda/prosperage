@@ -44,6 +44,7 @@ export default function Index() {
   return (
     <View>
       <Route current={active} />
+      <View className='h-[calc(142px+env(safe-area-inset-bottom)+10px)]' />
       <TabBar />
     </View>
   )

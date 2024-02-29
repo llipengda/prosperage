@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { type Page } from '@/app.config'
-import { navigate } from '../utils/navigate'
+import { redirect as _redirect, navigate } from '../utils/navigate'
 
 type ToPage = {
   [key in Page]: `/${key}` | `/${key}?${string}`
@@ -9,15 +9,20 @@ type ToPage = {
 type NavigateProps = {
   to: ToPage
   delay?: number
+  redirect?: boolean
 }
 
-export default function Navigate({ to, delay = 0 }: NavigateProps) {
+export default function Navigate({
+  to,
+  delay = 0,
+  redirect = false
+}: NavigateProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate(to)
+      redirect ? _redirect(to) : navigate(to)
     }, delay)
     return () => clearTimeout(timer)
-  }, [delay, to])
+  }, [delay, to, redirect])
 
   return <></>
 }
