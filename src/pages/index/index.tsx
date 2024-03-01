@@ -8,13 +8,6 @@ import Me from '@/pages/index/tabbars/me'
 import Policy from '@/pages/index/tabbars/policy'
 import useTabBarStore from '@/stores/tabBarStore'
 
-const tabMap = {
-  home: 0,
-  policy: 1,
-  community: 2,
-  me: 3
-}
-
 const Route = ({ current }: { current: number }) => {
   switch (current) {
     case 0:
@@ -37,7 +30,7 @@ export default function Index() {
 
   useEffect(() => {
     if (tab) {
-      setActive(tabMap[tab as keyof typeof tabMap])
+      setActive(Number(tab))
     }
   }, [setActive, tab])
 

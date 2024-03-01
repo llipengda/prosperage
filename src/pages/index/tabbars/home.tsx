@@ -36,6 +36,8 @@ export default function Home() {
     }
   ] // TODO: get articles from API
 
+  const handleClickArticle = notImplemented
+
   return (
     <View>
       <View className='h-[434px] bg-primary flex flex-col'>
@@ -76,6 +78,7 @@ export default function Home() {
               title={article.title}
               content={article.content}
               className='mx-[40px] mb-[16px]'
+              onClick={handleClickArticle}
             />
           ))}
         </View>
