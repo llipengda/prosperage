@@ -5,6 +5,7 @@ import Navigate from '@/components/Navigate'
 import LoginForm from '@/components/login/LoginForm'
 import Logo from '@/components/login/Logo'
 import useLoginStore from '@/stores/loginStore'
+import useTabBarStore from '@/stores/tabBarStore'
 
 export default function Login() {
   const [showLogo, setShowLogo] = useState(true)
@@ -14,6 +15,8 @@ export default function Login() {
   const [timer, setTimer] = useState<NodeJS.Timeout>()
 
   const token = useLoginStore(state => state.token)
+
+  const active = useTabBarStore(state => state.active)
 
   Taro.useLoad(() => {
     const needLogin = !token
@@ -57,7 +60,11 @@ export default function Login() {
       ) : showReceiveCode ? (
         <Navigate to='/pages/login/code/code' delay={200} />
       ) : (
-        <Navigate to='/pages/index/index?tab=home' delay={200} redirect />
+        <Navigate
+          to={`/pages/index/index?tab=${active}`}
+          delay={200}
+          redirect
+        />
       )}
     </View>
   )
