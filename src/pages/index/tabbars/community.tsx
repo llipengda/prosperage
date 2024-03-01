@@ -4,6 +4,7 @@ import add from '@/assets/add.svg'
 import friend from '@/assets/friend.svg'
 import hot from '@/assets/hot.svg'
 import Search from '@/components/Search'
+import Post from '@/components/index/Post'
 import SwitchButton from '@/components/index/SwitchButton'
 import notImplemented from '@/utils/notImplemented'
 
@@ -46,7 +47,44 @@ export default function Community() {
         </View>
       </View>
       <View className='flex flex-col w-screen mt-[60px]'>
-        
+        <Post
+          className='mb-[32px]'
+          id='1'
+          userAvatar='https://api.crazyforlove.fun/static/1.jpg'
+          userName='小盈'
+          time='300年前'
+          content='此外，为确保春节期间社会保险经办服务不断档，群众可通过海南社保医保公共服务平台、“海南医保”小程序、“海南一卡通”APP等平台快捷办理社保医保业务。如有问题可拨打12345热线咨询。'
+          image='https://api.crazyforlove.fun/static/1.jpg'
+          likes={100}
+          comments={100}
+          shares={100}
+          liked
+        />
+        <Post
+          className='mb-[32px]'
+          id='2'
+          userAvatar='https://api.crazyforlove.fun/static/1.jpg'
+          userName='小盈'
+          time='300年前'
+          content='此外，为确保春节期间社会保险经办服务不断档，群众可通过海南社保医保公共服务平台、“海南医保”小程序、“海南一卡通”APP等平台快捷办理社保医保业务。如有问题可拨打12345热线咨询。'
+          image='https://api.crazyforlove.fun/static/1.jpg'
+          likes={100}
+          comments={100}
+          shares={100}
+          liked
+        />
+        <Post
+          className='mb-[32px]'
+          id='3'
+          userAvatar='https://api.crazyforlove.fun/static/1.jpg'
+          userName='小盈'
+          time='300年前'
+          content='此外，为确保春节期间社会保险经办服务不断档，群众可通过海南社保医保公共服务平台、“海南医保”小程序、“海南一卡通”APP等平台快捷办理社保医保业务。如有问题可拨打12345热线咨询。'
+          image='https://api.crazyforlove.fun/static/1.jpg'
+          likes={100}
+          comments={100}
+          shares={100}
+        />
       </View>
     </View>
   )
