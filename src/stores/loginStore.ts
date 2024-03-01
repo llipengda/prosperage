@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { createJSONStorage, persist } from 'zustand/middleware'
 import TaroStorage from '@/utils/TaroStorage'
 import logger from '@/utils/logMiddleware'
 
@@ -12,15 +12,16 @@ type LoginStore = {
 
 const useLoginStore = create<LoginStore>()(
   persist(
+    // TODO: Remove this in production
     logger(set => ({
-      token: undefined,
-      phone: undefined,
+      token: undefined as string | undefined,
+      phone: undefined as string | undefined,
       setPhone: phone => set({ phone }),
       setToken: token => set({ token })
     })),
     {
       name: 'login-store',
-      getStorage: () => TaroStorage
+      storage: createJSONStorage(() => TaroStorage)
     }
   )
 )
