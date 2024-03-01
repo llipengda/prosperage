@@ -1,5 +1,6 @@
 import { View } from '@tarojs/components'
 import Search from '@/components/Search'
+import Title from '@/components/index/Title'
 
 export default function Policy() {
   return (
@@ -9,6 +10,9 @@ export default function Policy() {
           让每个人的养老更美好！
         </View>
         <Search className='mx-[40px] mt-[20px]' />
+      </View>
+      <View className='flex flex-col w-screen'>
+        <Title className='mt-[56px] mx-[40px]' text='相关咨询' />
       </View>
     </View>
   )
