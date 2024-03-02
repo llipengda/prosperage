@@ -5,8 +5,6 @@ import { TAB_BAR_LIST } from '@/common/tabBarList'
 import useTabBarStore from '@/stores/tabBarStore'
 
 const TabBar = () => {
-  console.warn('TabBar')
-
   const { active, setActive } = useTabBarStore()
 
   const handleClick = useCallback(

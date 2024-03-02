@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { Image, Text, View } from '@tarojs/components'
 import questionMark from '@/assets/question_mark.svg'
 import BackButton from '@/components/BackButton'
+import TextButton from '@/components/TextButton'
 import Question from '@/components/customize/Question'
 import notImplemented from '@/utils/notImplemented'
 import sleep from '@/utils/sleep'
@@ -59,6 +60,8 @@ const Customize = () => {
     []
   )
 
+  const handleConfirm = notImplemented
+
   return (
     <View>
       <View
@@ -106,6 +109,7 @@ const Customize = () => {
               onSelect={handleSelect}
             />
           ))}
+          <TextButton className='mx-auto mt-[240px] mb-[70px]' text='完成' onClick={handleConfirm} />
         </View>
       )}
     </View>
