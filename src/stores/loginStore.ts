@@ -8,6 +8,7 @@ type LoginStore = {
   phone: string | undefined
   setPhone: (phone: string) => void
   setToken: (token: string) => void
+  removeToken: () => void
 }
 
 const useLoginStore = create<LoginStore>()(
@@ -16,7 +17,8 @@ const useLoginStore = create<LoginStore>()(
       token: undefined,
       phone: undefined,
       setPhone: phone => set({ phone }),
-      setToken: token => set({ token })
+      setToken: token => set({ token }),
+      removeToken: () => set({ token: undefined })
     })),
     {
       name: 'login-store',
