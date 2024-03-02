@@ -65,7 +65,7 @@ const Customize = () => {
   return (
     <View>
       <View
-        className={`bg-primary w-screen transition-all delay-200 ease-in-out ${showBackground ? 'h-screen flex flex-col justify-center' : 'h-[436px] fixed top-0 z-10'}`}
+        className={`bg-primary w-screen transition-all duration-500 ease-in-out ${showBackground ? 'h-screen flex flex-col justify-center' : 'h-[436px] fixed top-0 z-10'}`}
         onClick={showBackground ? handleClickContinue : () => {}}
       >
         {showBackground && (

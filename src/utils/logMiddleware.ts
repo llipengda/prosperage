@@ -1,6 +1,6 @@
 import { StateCreator, StoreMutatorIdentifier } from 'zustand'
 
-type Logger = <
+export type Logger = <
   T extends unknown,
   Mps extends [StoreMutatorIdentifier, unknown][] = [],
   Mcs extends [StoreMutatorIdentifier, unknown][] = []
