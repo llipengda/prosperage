@@ -1,12 +1,14 @@
 import { useEffect } from 'react'
 import { View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import { UserApi } from '@/api'
 import TabBar from '@/components/TabBar'
 import Community from '@/pages/index/tabbars/community'
 import Home from '@/pages/index/tabbars/home'
 import Me from '@/pages/index/tabbars/me'
 import Policy from '@/pages/index/tabbars/policy'
 import useTabBarStore from '@/stores/tabBarStore'
+import useUserStore from '@/stores/userStore'
 
 const Route = ({ current }: { current: number }) => {
   switch (current) {
@@ -28,11 +30,14 @@ export default function Index() {
 
   const { active, setActive } = useTabBarStore()
 
+  const setUser = useUserStore(state => state.setInfo)
+
   useEffect(() => {
     if (tab) {
       setActive(Number(tab))
     }
-  }, [setActive, tab])
+    UserApi.info().then(res => setUser(res))
+  }, [setActive, setUser, tab])
 
   return (
     <View>
