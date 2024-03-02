@@ -1,6 +1,6 @@
 import { Image, Text, View } from '@tarojs/components'
 import SettingButton from '@/components/index/SettingButton'
-import Title from '@/components/index/Title'
+import Title from '@/components/Title'
 import useUserStore from '@/stores/userStore'
 import notImplemented from '@/utils/notImplemented'
 
@@ -19,7 +19,10 @@ export default function Me() {
       <View className='flex items-center mt-[216px]'>
         <Image
           className='w-[180px] h-[180px] rounded-full shadow-[0_8px_24px_0_#00000040] mx-[40px]'
-          src={user.avatar || 'https://api.crazyforlove.fun/static/1.jpg'}
+          src={
+            user.avatar ||
+            'https://api.crazyforlove.fun/static/1.jpg' /* TODO: replace this with default avatar */
+          }
           mode='aspectFill'
         />
         <View className='flex flex-col justify-center mt-[20px]'>

@@ -6,7 +6,7 @@ import researchReport from '@/assets/icons/research_report.svg'
 import Search from '@/components/Search'
 import Article from '@/components/index/Article'
 import IconButton from '@/components/index/IconButton'
-import Title from '@/components/index/Title'
+import Title from '@/components/Title'
 import notImplemented from '@/utils/notImplemented'
 
 export default function Policy() {

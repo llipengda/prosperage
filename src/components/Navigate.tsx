@@ -1,10 +1,6 @@
 import { useEffect } from 'react'
-import { type Page } from '@/app.config'
+import type { ToPage } from '@/utils/navigate'
 import { redirect as _redirect, navigate } from '../utils/navigate'
-
-type ToPage = {
-  [key in Page]: `/${key}` | `/${key}?${string}`
-}[Page]
 
 type NavigateProps = {
   to: ToPage

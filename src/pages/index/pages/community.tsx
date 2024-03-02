@@ -64,6 +64,7 @@ export default function Community() {
         scrollY
         enhanced
         showScrollbar={false}
+        enableFlex
         scrollWithAnimation
         refresherEnabled
         refresherTriggered={refreshing}

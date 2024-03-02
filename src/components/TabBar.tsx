@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Image, Text, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { TAB_BAR_LIST } from '@/common/tabBarList'
 import useTabBarStore from '@/stores/tabBarStore'
 
-const TabBar = React.memo(() => {
+const TabBar = () => {
+  console.warn('TabBar')
+
   const { active, setActive } = useTabBarStore()
 
-  const handleClick = (index: number) => () => {
-    Taro.pageScrollTo({ scrollTop: 0 })
-    setActive(index)
-  }
+  const handleClick = useCallback(
+    (index: number) => () => {
+      Taro.pageScrollTo({ scrollTop: 0 })
+      setActive(index)
+    },
+    [setActive]
+  )
 
   return (
     <View className='fixed bottom-0 pb-[env(safe-area-inset-bottom)] w-screen bg-white flex flex-row items-center justify-around z-10 h-[calc(142px+env(safe-area-inset-bottom))]'>
@@ -34,6 +39,6 @@ const TabBar = React.memo(() => {
       ))}
     </View>
   )
-})
+}
 
-export default TabBar
+export default React.memo(TabBar)

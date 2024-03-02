@@ -1,5 +1,10 @@
 import Taro from '@tarojs/taro'
+import type { Page } from '@/app.config'
 
-export const navigate = (url: string) => Taro.navigateTo({ url })
+export type ToPage = {
+  [key in Page]: `/${key}` | `/${key}?${string}`
+}[Page]
 
-export const redirect = (url: string) => Taro.redirectTo({ url })
+export const navigate = (url: ToPage) => Taro.navigateTo({ url })
+
+export const redirect = (url: ToPage) => Taro.redirectTo({ url })

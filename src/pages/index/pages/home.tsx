@@ -3,11 +3,14 @@ import rightArrow from '@/assets/arrow_right.svg'
 import Search from '@/components/Search'
 import Article from '@/components/index/Article'
 import Swiper from '@/components/index/Swiper'
-import Title from '@/components/index/Title'
+import Title from '@/components/Title'
 import notImplemented from '@/utils/notImplemented'
+import { navigate } from '@/utils/navigate'
 
 export default function Home() {
-  const handleClickCustomize = notImplemented
+  const handleClickCustomize = () => {
+    navigate('/pages/customize/customize')
+  }
 
   const articles = [
     {
