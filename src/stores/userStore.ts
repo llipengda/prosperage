@@ -38,7 +38,7 @@ const useUserStore = create<UserStore>()(
       logout: () => set(initUser)
     })),
     {
-      name: 'userStore',
+      name: 'user-store',
       storage: createJSONStorage(() => TaroStorage)
     }
   )
