@@ -1,17 +1,15 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import type { Expand, UserApi } from '@/api'
+import type TUser from '@/types/User'
 import TaroStorage from '@/utils/TaroStorage'
 import logger from '@/utils/logMiddleware'
 
-type User = Expand<Awaited<ReturnType<(typeof UserApi)['info']>>>
-
-type UserStore = User & {
-  setInfo: (info: User) => void
+type UserStore = TUser & {
+  setInfo: (info: TUser) => void
   logout: () => void
 }
 
-const initUser: User = {
+const initUser: TUser = {
   id: -1,
   type: -1,
   name: '',

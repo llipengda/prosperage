@@ -5,6 +5,7 @@ import comment from '@/assets/comment.svg'
 import like from '@/assets/like.svg'
 import likeSelected from '@/assets/like_selected.svg'
 import share from '@/assets/share.svg'
+import { DEFAULT_AVATAR, DEFAULT_NAME } from '@/common/constants'
 import { navigate } from '@/utils/navigate'
 import notImplemented from '@/utils/notImplemented'
 import previewImage from '@/utils/previewImage'
@@ -59,12 +60,14 @@ export function Post({
     >
       <View className='flex items-center'>
         <Image
-          src={userAvatar}
+          src={userAvatar || DEFAULT_AVATAR}
           className='w-[114px] h-[114px] rounded-full'
           mode='aspectFill'
         />
         <View className='flex flex-col ml-[20px]'>
-          <Text className='text-[40px] leading-[50.8px]'>{userName}</Text>
+          <Text className='text-[40px] leading-[50.8px]'>
+            {userName || DEFAULT_NAME}
+          </Text>
           <View className='flex items-center'>
             <Image src={clock} className='w-[20px] h-[20px]' mode='aspectFit' />
             <Text className='text-[20px] leading-[25.4px] text-[#C6C6C6] ml-[10px]'>

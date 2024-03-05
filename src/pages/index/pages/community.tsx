@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { Image, ScrollView, Text, View } from '@tarojs/components'
 import { PostApi } from '@/api'
 import add from '@/assets/add.svg'
@@ -7,13 +7,13 @@ import earphone from '@/assets/earphone.svg'
 import friend from '@/assets/friend.svg'
 import hot from '@/assets/hot.svg'
 import mail from '@/assets/mail.svg'
+import { POST_PER_PAGE } from '@/common/constants'
 import Post from '@/components/Post'
 import Search from '@/components/Search'
 import RoundButton from '@/components/index/RoundButton'
 import SwitchButton from '@/components/index/SwitchButton'
-import type TPost from '@/types/Post'
+import useGetByPage from '@/hooks/useGetByPage'
 import notImplemented from '@/utils/notImplemented'
-import sleep from '@/utils/sleep'
 
 export default function Community() {
   const [checked, setChecked] = useState(0)
@@ -24,25 +24,14 @@ export default function Community() {
 
   const handleClickFriendCircle = notImplemented
 
-  const [refreshing, setRefreshing] = useState(false)
-
-  const handleRefresh = async () => {
-    setRefreshing(true)
-    await sleep(2000)
-    setRefreshing(false)
-  }
-
-  const [posts, setPosts] = useState<TPost[]>([])
-
-  const pageIndex = useRef(0)
-
-  useEffect(() => {
-    PostApi.getList({
-      page: pageIndex.current,
-      pageSize: 15,
-      orderByPopularity: false
-    }).then(res => setPosts(res as TPost[]))
-  }, [])
+  const {
+    data: posts,
+    get: getPosts,
+    hasMore,
+    loading,
+    refreshing,
+    refresh
+  } = useGetByPage(POST_PER_PAGE, PostApi.getList, { orderByPopularity: false })
 
   return (
     <View className='relative'>
@@ -82,7 +71,8 @@ export default function Community() {
         scrollWithAnimation
         refresherEnabled
         refresherTriggered={refreshing}
-        onRefresherRefresh={handleRefresh}
+        onRefresherRefresh={refresh}
+        onScrollToLower={hasMore ? getPosts : () => {}}
       >
         {posts.map(post => (
           <Post
@@ -100,6 +90,16 @@ export default function Community() {
             liked={post.isLiked}
           />
         ))}
+        {!hasMore && (
+          <View className='flex items-center justify-center h-[100px] text-[#C6C6C6]'>
+            <Text>没有更多内容</Text>
+          </View>
+        )}
+        {loading && (
+          <View className='flex items-center justify-center h-[100px] text-[#C6C6C6]'>
+            <Text>加载中...</Text>
+          </View>
+        )}
       </ScrollView>
       <View className='absolute bottom-[32px] flex items-center justify-between w-screen px-[169px]'>
         <RoundButton icon={earphone} onClick={notImplemented} />
