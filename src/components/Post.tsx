@@ -5,12 +5,13 @@ import comment from '@/assets/comment.svg'
 import like from '@/assets/like.svg'
 import likeSelected from '@/assets/like_selected.svg'
 import share from '@/assets/share.svg'
+import { navigate } from '@/utils/navigate'
 import notImplemented from '@/utils/notImplemented'
 import previewImage from '@/utils/previewImage'
 
 type PostProps = {
   className?: string
-  id: string
+  id: string | number
   userAvatar: string
   userName: string
   time: string
@@ -38,7 +39,7 @@ export function Post({
   const [liked, setLiked] = useState(_liked)
   const [addLike, setAddLike] = useState(0)
 
-  const handleClick = notImplemented
+  const handleClick = () => navigate(`/pages/post/post?id=${id}`)
 
   const handleShare = notImplemented
 

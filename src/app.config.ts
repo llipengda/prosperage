@@ -2,7 +2,9 @@ const pages = [
   'pages/login/login',
   'pages/login/code/code',
   'pages/index/index',
-  'pages/customize/customize'
+  'pages/customize/customize',
+  'pages/error/error',
+  'pages/post/post'
 ] as const
 
 export type Page = (typeof pages)[number]

@@ -1,15 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Image, ScrollView, Text, View } from '@tarojs/components'
+import { PostApi } from '@/api'
 import add from '@/assets/add.svg'
 import addHollow from '@/assets/add_hollow.svg'
 import earphone from '@/assets/earphone.svg'
 import friend from '@/assets/friend.svg'
 import hot from '@/assets/hot.svg'
 import mail from '@/assets/mail.svg'
+import Post from '@/components/Post'
 import Search from '@/components/Search'
-import Post from '@/components/index/Post'
 import RoundButton from '@/components/index/RoundButton'
 import SwitchButton from '@/components/index/SwitchButton'
+import type TPost from '@/types/Post'
 import notImplemented from '@/utils/notImplemented'
 import sleep from '@/utils/sleep'
 
@@ -29,6 +31,18 @@ export default function Community() {
     await sleep(2000)
     setRefreshing(false)
   }
+
+  const [posts, setPosts] = useState<TPost[]>([])
+
+  const pageIndex = useRef(0)
+
+  useEffect(() => {
+    PostApi.getList({
+      page: pageIndex.current,
+      pageSize: 15,
+      orderByPopularity: false
+    }).then(res => setPosts(res as TPost[]))
+  }, [])
 
   return (
     <View className='relative'>
@@ -70,44 +84,22 @@ export default function Community() {
         refresherTriggered={refreshing}
         onRefresherRefresh={handleRefresh}
       >
-        <Post
-          className='mb-[32px]'
-          id='1'
-          userAvatar='https://api.crazyforlove.fun/static/1.jpg'
-          userName='小盈'
-          time='300年前'
-          content='此外，为确保春节期间社会保险经办服务不断档，群众可通过海南社保医保公共服务平台、“海南医保”小程序、“海南一卡通”APP等平台快捷办理社保医保业务。如有问题可拨打12345热线咨询。'
-          image='https://api.crazyforlove.fun/static/1.jpg'
-          likes={100}
-          comments={100}
-          shares={100}
-          liked
-        />
-        <Post
-          className='mb-[32px]'
-          id='2'
-          userAvatar='https://api.crazyforlove.fun/static/1.jpg'
-          userName='小盈'
-          time='300年前'
-          content='此外，为确保春节期间社会保险经办服务不断档，群众可通过海南社保医保公共服务平台、“海南医保”小程序、“海南一卡通”APP等平台快捷办理社保医保业务。如有问题可拨打12345热线咨询。'
-          image='https://api.crazyforlove.fun/static/1.jpg'
-          likes={100}
-          comments={100}
-          shares={100}
-          liked
-        />
-        <Post
-          className='mb-[32px]'
-          id='3'
-          userAvatar='https://api.crazyforlove.fun/static/1.jpg'
-          userName='小盈'
-          time='300年前'
-          content='此外，为确保春节期间社会保险经办服务不断档，群众可通过海南社保医保公共服务平台、“海南医保”小程序、“海南一卡通”APP等平台快捷办理社保医保业务。如有问题可拨打12345热线咨询。'
-          image='https://api.crazyforlove.fun/static/1.jpg'
-          likes={100}
-          comments={100}
-          shares={100}
-        />
+        {posts.map(post => (
+          <Post
+            className='mb-[32px]'
+            key={post.id}
+            id={post.id}
+            userAvatar={post.avatar}
+            userName={post.name}
+            time={post.updateTime}
+            content={post.content}
+            image={post.image}
+            likes={post.likes}
+            comments={post.comments}
+            shares={post.shares}
+            liked={post.isLiked}
+          />
+        ))}
       </ScrollView>
       <View className='absolute bottom-[32px] flex items-center justify-between w-screen px-[169px]'>
         <RoundButton icon={earphone} onClick={notImplemented} />

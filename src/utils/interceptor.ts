@@ -31,6 +31,18 @@ const interceptor: Taro.interceptor = async chain => {
         useLoginStore.getState().setToken(token)
         return Taro.request(requestParams)
       }
+      if (res.statusCode === 500) {
+        if (res?.data?.msg) {
+          Taro.reLaunch({
+            url: `/pages/error/error?code=500&message=${res.data.msg}`
+          })
+        } else {
+          Taro.reLaunch({
+            url: '/pages/error/error?code=500&message=服务器错误'
+          })
+        }
+        return res
+      }
       return res
     })
 }
