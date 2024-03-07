@@ -7,7 +7,7 @@ import earphone from '@/assets/earphone.svg'
 import friend from '@/assets/friend.svg'
 import hot from '@/assets/hot.svg'
 import mail from '@/assets/mail.svg'
-import { POST_PER_PAGE } from '@/common/constants'
+import { POSTS_PER_PAGE } from '@/common/constants'
 import Post from '@/components/Post'
 import Search from '@/components/Search'
 import RoundButton from '@/components/index/RoundButton'
@@ -31,7 +31,7 @@ export default function Community() {
     loading,
     refreshing,
     refresh
-  } = useGetByPage(POST_PER_PAGE, PostApi.getList, { orderByPopularity: false })
+  } = useGetByPage(POSTS_PER_PAGE, PostApi.getList, { orderByPopularity: false })
 
   return (
     <View className='relative'>

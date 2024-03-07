@@ -14,7 +14,7 @@ const BackButton: React.FC<BackButtonProps> = ({ className }) => {
   return (
     <Image
       src={arrowLeft}
-      className={`w-[28px] h-[48px] absolute left-[40px] top-[140px] ${className}`}
+      className={`w-[28px] h-[48px] fixed left-[40px] top-[140px] ${className}`}
       mode='aspectFit'
       onClick={() => Taro.navigateBack()}
     />

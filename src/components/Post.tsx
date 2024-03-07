@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
-import { type ITouchEvent, Image, Text, View } from '@tarojs/components'
+import React from 'react'
+import { Image, Text, View } from '@tarojs/components'
 import clock from '@/assets/clock.svg'
 import comment from '@/assets/comment.svg'
 import like from '@/assets/like.svg'
 import likeSelected from '@/assets/like_selected.svg'
 import share from '@/assets/share.svg'
 import { DEFAULT_AVATAR, DEFAULT_NAME } from '@/common/constants'
+import useLike from '@/hooks/useLike'
+import useTime from '@/hooks/useTime'
 import { navigate } from '@/utils/navigate'
 import notImplemented from '@/utils/notImplemented'
 import previewImage from '@/utils/previewImage'
@@ -22,6 +24,7 @@ type PostProps = {
   comments: number
   shares: number
   liked?: boolean
+  clickToDetail?: boolean
 }
 
 export function Post({
@@ -32,25 +35,23 @@ export function Post({
   time,
   content,
   image,
-  likes,
+  likes: originalLikes,
   comments,
   shares,
-  liked: _liked = false
+  liked = false,
+  clickToDetail = true
 }: PostProps) {
-  const [liked, setLiked] = useState(_liked)
-  const [addLike, setAddLike] = useState(0)
-
-  const handleClick = () => navigate(`/pages/post/post?id=${id}`)
+  const handleClick = clickToDetail
+    ? () => navigate(`/pages/post/post?id=${id}`)
+    : () => {}
 
   const handleShare = notImplemented
 
-  const handleComment = notImplemented
+  const handleComment = handleClick
 
-  const handleLike = (e: ITouchEvent) => {
-    e.stopPropagation()
-    setLiked(!liked)
-    setAddLike(_liked ? (liked ? -1 : 0) : liked ? 0 : 1)
-  }
+  const formatTime = useTime()
+
+  const { isLiked, likes, handleLike } = useLike(id, liked, originalLikes, 1)
 
   return (
     <View
@@ -71,7 +72,7 @@ export function Post({
           <View className='flex items-center'>
             <Image src={clock} className='w-[20px] h-[20px]' mode='aspectFit' />
             <Text className='text-[20px] leading-[25.4px] text-[#C6C6C6] ml-[10px]'>
-              {time}
+              {formatTime(time)}
             </Text>
           </View>
         </View>
@@ -101,12 +102,12 @@ export function Post({
         </View>
         <View className='flex flex-row items-center' onClick={handleLike}>
           <Image
-            src={liked ? likeSelected : like}
+            src={isLiked ? likeSelected : like}
             className='w-[42px] h-[42px]'
             mode='aspectFit'
           />
           <Text className='text-[20px] leading-[25.4px] ml-[10px] text-[#C6C6C6]'>
-            {likes + addLike}
+            {likes}
           </Text>
         </View>
       </View>
