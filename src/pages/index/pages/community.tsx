@@ -40,6 +40,9 @@ export default function Community() {
   const update = usePostsUpdateStore(state => state.update)
 
   useEffect(() => {
+    if (update === 0) {
+      return
+    }
     refresh()
   }, [refresh, update])
 
