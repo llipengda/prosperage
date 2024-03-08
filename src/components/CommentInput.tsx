@@ -24,7 +24,7 @@ const CommentInput: React.FC<CommentInputProps> = ({ className, onSubmit }) => {
   return (
     <View
       className={`fixed rounded-[100px] bg-white shadow-[0_8px_24px_0_#00000040] mx-[48px] h-[84px] flex flex-row items-center w-[calc(100vw-96px)] ${className}`}
-      style={{ bottom: focus ? `${keyboardHeight + 10 || 35}Px` : '70rpx' }}
+      style={{ bottom: focus ? `${(keyboardHeight || 25) + 10}Px` : '70rpx' }}
     >
       <View className='ml-[32px] mr-[34px]'>
         <Image
@@ -46,6 +46,14 @@ const CommentInput: React.FC<CommentInputProps> = ({ className, onSubmit }) => {
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}
       />
+      {!!value && (
+        <View
+          className='text-primary text-[32px] leading-[40.64px] mr-[32px] w-[100px]'
+          onClick={handleConfirm}
+        >
+          发送
+        </View>
+      )}
     </View>
   )
 }
