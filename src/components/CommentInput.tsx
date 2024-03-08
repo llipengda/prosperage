@@ -48,7 +48,7 @@ const CommentInput: React.FC<CommentInputProps> = ({ className, onSubmit }) => {
       />
       {!!value && (
         <View
-          className='text-primary text-[32px] leading-[40.64px] mr-[32px] w-[100px]'
+          className='text-white bg-primary text-center rounded-[200px] text-[32px] leading-[40.64px] mr-[20px] w-[182px] h-[60px] py-[10px] px-[30px]'
           onClick={handleConfirm}
         >
           发送
