@@ -33,12 +33,21 @@ const useGetByPage = <
 
   const refresh = useCallback(async () => {
     index.current = 0
-    setData([])
     setHasMore(true)
     setRefreshing(true)
-    await get()
+    setLoading(true)
+    const res = await getFunc({
+      page: index.current++,
+      pageSize,
+      ...moreParamsRef.current
+    } as U)
+    if (res.length < pageSize) {
+      setHasMore(false)
+    }
+    setData(res as Required<T>[])
+    setLoading(false)
     setRefreshing(false)
-  }, [get])
+  }, [getFunc, pageSize])
 
   useEffect(() => {
     refresh()
