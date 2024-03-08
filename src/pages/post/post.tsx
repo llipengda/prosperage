@@ -14,6 +14,7 @@ import Navigate from '@/components/Navigate'
 import { Post } from '@/components/Post'
 import Title from '@/components/Title'
 import useGetByPage from '@/hooks/useGetByPage'
+import usePostsUpdateStore from '@/stores/postsUpdateStore'
 import type TComment from '@/types/Comment'
 import type TPost from '@/types/Post'
 
@@ -42,6 +43,8 @@ const PPost = () => {
     type: 1
   })
 
+  const updatePosts = usePostsUpdateStore(state => state.updatePosts)
+
   const handleSubmitComment = useCallback(
     async (value: string) => {
       const comment = (await CommentApi.comment({
@@ -49,9 +52,10 @@ const PPost = () => {
         objId: Number(id),
         content: value
       })) as TComment
-      setComments([...comments, comment])
+      setComments(c => [...c, comment])
+      updatePosts()
     },
-    [id, comments, setComments]
+    [id, setComments, updatePosts]
   )
 
   if (!id) {

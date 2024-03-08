@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Image, ScrollView, Text, View } from '@tarojs/components'
-import Taro from '@tarojs/taro'
 import { PostApi } from '@/api'
 import add from '@/assets/add.svg'
 import addHollow from '@/assets/add_hollow.svg'
@@ -14,6 +13,7 @@ import Search from '@/components/Search'
 import RoundButton from '@/components/index/RoundButton'
 import SwitchButton from '@/components/index/SwitchButton'
 import useGetByPage from '@/hooks/useGetByPage'
+import usePostsUpdateStore from '@/stores/postsUpdateStore'
 import { navigate } from '@/utils/navigate'
 import notImplemented from '@/utils/notImplemented'
 
@@ -37,7 +37,11 @@ export default function Community() {
     orderByPopularity: false
   })
 
-  Taro.useDidShow(refresh)
+  const update = usePostsUpdateStore(state => state.update)
+
+  useEffect(() => {
+    refresh()
+  }, [refresh, update])
 
   const handleClickEarphone = notImplemented
 
