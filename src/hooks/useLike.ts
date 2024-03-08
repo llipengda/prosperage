@@ -17,6 +17,7 @@ const useLike = (
 
   useEffect(() => {
     setIsLiked(liked)
+    setAddLike(0)
   }, [liked])
 
   const handleLike = async (e: ITouchEvent) => {
