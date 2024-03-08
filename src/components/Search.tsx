@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Image, Input, View } from '@tarojs/components'
 import scan from '@/assets/scan.svg'
 import search from '@/assets/search.svg'
@@ -8,7 +8,7 @@ type SearchProps = {
   className?: string
 }
 
-export default function Search({ className }: SearchProps) {
+function Search({ className }: SearchProps) {
   const [value, setValue] = useState('')
 
   const handleSearch = () => {
@@ -41,3 +41,5 @@ export default function Search({ className }: SearchProps) {
     </View>
   )
 }
+
+export default React.memo(Search)
