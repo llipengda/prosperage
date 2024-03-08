@@ -52,7 +52,7 @@ const Comment: React.FC<CommentProps> = ({
       </View>
       <View className='flex flex-col pl-[14px] w-full'>
         <Text className='text-[32px] leading-[40.64px]'>{userName}</Text>
-        <Text className='text-[28px] leading-[30.48px] mt-[8px]'>
+        <Text className='text-[28px] leading-[30.48px] mt-[8px] break-all'>
           {content}
         </Text>
         <View className='flex flex-row items-center mt-[40px] justify-between'>

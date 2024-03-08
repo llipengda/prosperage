@@ -77,7 +77,9 @@ export function Post({
           </View>
         </View>
       </View>
-      <Text className='text-[32px] leading-[40.64px] mt-[40px]'>{content}</Text>
+      <Text className='text-[32px] leading-[40.64px] mt-[40px] break-all'>
+        {content}
+      </Text>
       {image && (
         <Image
           src={image}
