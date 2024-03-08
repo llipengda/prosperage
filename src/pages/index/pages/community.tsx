@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Image, ScrollView, Text, View } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import { PostApi } from '@/api'
 import add from '@/assets/add.svg'
 import addHollow from '@/assets/add_hollow.svg'
@@ -13,6 +14,7 @@ import Search from '@/components/Search'
 import RoundButton from '@/components/index/RoundButton'
 import SwitchButton from '@/components/index/SwitchButton'
 import useGetByPage from '@/hooks/useGetByPage'
+import { navigate } from '@/utils/navigate'
 import notImplemented from '@/utils/notImplemented'
 
 export default function Community() {
@@ -31,7 +33,17 @@ export default function Community() {
     loading,
     refreshing,
     refresh
-  } = useGetByPage(POSTS_PER_PAGE, PostApi.getList, { orderByPopularity: false })
+  } = useGetByPage(POSTS_PER_PAGE, PostApi.getList, {
+    orderByPopularity: false
+  })
+
+  Taro.useDidShow(refresh)
+
+  const handleClickEarphone = notImplemented
+
+  const handleClickAdd = () => navigate('/pages/post/add/add')
+
+  const handleClickMail = notImplemented
 
   return (
     <View className='relative'>
@@ -102,9 +114,9 @@ export default function Community() {
         )}
       </ScrollView>
       <View className='absolute bottom-[32px] flex items-center justify-between w-screen px-[169px]'>
-        <RoundButton icon={earphone} onClick={notImplemented} />
-        <RoundButton icon={addHollow} onClick={notImplemented} />
-        <RoundButton icon={mail} onClick={notImplemented} />
+        <RoundButton icon={earphone} onClick={handleClickEarphone} />
+        <RoundButton icon={addHollow} onClick={handleClickAdd} />
+        <RoundButton icon={mail} onClick={handleClickMail} />
       </View>
     </View>
   )

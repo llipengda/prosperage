@@ -4,7 +4,8 @@ const pages = [
   'pages/index/index',
   'pages/customize/customize',
   'pages/error/error',
-  'pages/post/post'
+  'pages/post/post',
+  'pages/post/add/add'
 ] as const
 
 export type Page = (typeof pages)[number]
