@@ -14,8 +14,8 @@ type LoginStore = {
 const useLoginStore = create<LoginStore>()(
   persist(
     logger(set => ({
-      token: undefined,
-      phone: undefined,
+      token: undefined as string | undefined,
+      phone: undefined as string | undefined,
       setPhone: phone => set({ phone }),
       setToken: token => set({ token }),
       removeToken: () => set({ token: undefined })
