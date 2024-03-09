@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Image, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { PostApi } from '@/api'
+import { CommentApi, PostApi } from '@/api'
 import communityFriends from '@/assets/community_friends.svg'
 import link from '@/assets/link.svg'
 import wechat from '@/assets/wechat.svg'
@@ -15,13 +15,22 @@ interface ShareFloatLayoutProps {
   /** @hint Will be injected by the useFloatLayout hook */
   onClose?: () => void
   id: string | number
+  type: 'post' | 'comment'
 }
 
-function ShareFloatLayout({ onClose = () => {}, id }: ShareFloatLayoutProps) {
+function ShareFloatLayout({
+  onClose = () => {},
+  id,
+  type
+}: ShareFloatLayoutProps) {
   const update = usePostsUpdateStore(state => state.updatePosts)
 
   const handleShareCommunityFriends = async () => {
-    PostApi.share({ postId: Number(id) })
+    if (type === 'post') {
+      await PostApi.share({ postId: Number(id) })
+    } else if (type === 'comment') {
+      await CommentApi.share({ commentId: Number(id) })
+    }
     await Taro.showToast({ title: '分享成功', icon: 'success', duration: 500 })
     await sleep(500)
     update()

@@ -47,7 +47,7 @@ export function Post({
     ? () => navigate(`/pages/post/post?id=${id}`)
     : () => {}
 
-  const [mount] = useFloatLayout(<ShareFloatLayout id={id} />)
+  const [mount] = useFloatLayout(<ShareFloatLayout id={id} type='post' />)
 
   const handleShare = useStopPropagation(mount)
 
