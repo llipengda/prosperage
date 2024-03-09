@@ -7,58 +7,73 @@ import {
 } from 'react'
 import React from 'react'
 import { PageContainer, type PageContainerProps } from '@tarojs/components'
-import { mountToPage, unmountFromPage } from '@/utils/DOMTools'
+import { mountToPage, unmountAtId } from '@/utils/DOMTools'
 import sleep from '@/utils/sleep'
 
 const useFloatLayout = (element: ReactElement, duration: number = 300) => {
-  const floatLayoutIdRef = useRef<string | null>(null)
+  const PageContainerWrapperRef = useRef<string | null>(null)
   const elementRef = useRef(element)
+  const mountedIdsRef = useRef<string[]>([])
 
-  const unmount = useCallback(() => {
-    if (floatLayoutIdRef.current) {
-      unmountFromPage(floatLayoutIdRef.current)
-      floatLayoutIdRef.current = null
+  const mayLeadToBadPerformanceUnmount = useCallback(() => {
+    if (PageContainerWrapperRef.current) {
+      unmountAtId(PageContainerWrapperRef.current)
+      PageContainerWrapperRef.current = null
     }
   }, [])
 
+  const mayLeadToBadPerformanceUnmountAll = useCallback(() => {
+    mountedIdsRef.current.forEach(id => {
+      unmountAtId(id)
+    })
+  }, [])
+
   const mount = useCallback(() => {
-    if (floatLayoutIdRef.current) {
+    if (PageContainerWrapperRef.current) {
       return
     }
 
     const Wrapper = () => {
       const [show, setShow] = useState(true)
+      const [unmounted, setUnmounted] = useState(false)
 
       const handleClose = async () => {
         setShow(false)
         await sleep(duration)
-        unmount()
+        setUnmounted(true)
+        PageContainerWrapperRef.current = null
       }
 
-      return React.createElement<PageContainerProps>(
-        PageContainer,
-        { show: show, round: true, onAfterLeave: unmount, duration },
-        React.createElement(
-          elementRef.current.type,
-          {
-            ...elementRef.current.props,
-            onClose: handleClose
-          },
-          elementRef.current.props.children ?? null
-        )
-      )
+      return unmounted
+        ? null
+        : React.createElement<PageContainerProps>(
+            PageContainer,
+            { show, round: true, onAfterLeave: handleClose, duration },
+            React.createElement(
+              elementRef.current.type,
+              {
+                ...elementRef.current.props,
+                onClose: handleClose
+              },
+              elementRef.current.props.children
+            )
+          )
     }
 
-    floatLayoutIdRef.current = mountToPage(React.createElement(Wrapper))
-  }, [duration, unmount])
+    PageContainerWrapperRef.current = mountToPage(React.createElement(Wrapper))
+
+    mountedIdsRef.current.push(PageContainerWrapperRef.current)
+  }, [duration])
 
   useEffect(() => {
-    return () => {
-      unmount()
-    }
-  }, [unmount])
+    return () => mayLeadToBadPerformanceUnmountAll()
+  }, [mayLeadToBadPerformanceUnmountAll])
 
-  return [mount, unmount] as const
+  return [
+    mount,
+    mayLeadToBadPerformanceUnmountAll,
+    mayLeadToBadPerformanceUnmount
+  ] as const
 }
 
 export default useFloatLayout

@@ -9,20 +9,30 @@ export const mountToPage = (element: ReactElement) => {
   const view = document.createElement('view')
   const id =
     '__DOMTools__mounted__' +
-    Taro.getCurrentInstance()?.router?.path?.replace(/\//g, '_')
+    Taro.getCurrentInstance()?.router?.path?.replace(/\//g, '_') +
+    '__' +
+    Date.now()
   if (document.getElementById(id)) {
     return id
   }
   view.id = id
   render(element, view)
   page?.appendChild(view)
-  return view.id
+  return id
 }
 
-export const unmountFromPage = (id: string) => {
+export const unmountAtId = (id: string) => {
   const element = document.getElementById(id)
   if (element) {
     unmountComponentAtNode(element)
     element.remove()
   }
+}
+
+export const mountTo = (id: string, element: ReactElement) => {
+  const container = document.getElementById(id)
+  if (!container) {
+    return
+  }
+  render(element, container)
 }
