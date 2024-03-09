@@ -1,4 +1,5 @@
-import { type ITouchEvent, Image, View } from '@tarojs/components'
+import { Image, View } from '@tarojs/components'
+import useStopPropagation from '@/hooks/useStopPropagation'
 
 type RoundButtonProps = {
   className?: string
@@ -11,10 +12,7 @@ export default function RoundButton({
   icon,
   onClick
 }: RoundButtonProps) {
-  const handleClick = (e: ITouchEvent) => {
-    e.stopPropagation()
-    onClick()
-  }
+  const handleClick = useStopPropagation(onClick)
 
   return (
     <View

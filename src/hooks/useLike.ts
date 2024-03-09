@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import type { ITouchEvent } from '@tarojs/components'
 import { LikeApi } from '@/api'
+import useStopPropagation from '@/hooks/useStopPropagation'
 
 /**
  * @param type 1: post, 2: comment
@@ -20,8 +20,7 @@ const useLike = (
     setAddLike(0)
   }, [liked])
 
-  const handleLike = async (e: ITouchEvent) => {
-    e.stopPropagation()
+  const handleLike = useStopPropagation(async () => {
     if (isLikeDisabled) {
       return
     }
@@ -34,7 +33,7 @@ const useLike = (
       await LikeApi.like({ objId: Number(id), type })
     }
     setIsLikeDisabled(false)
-  }
+  })
 
   return {
     isLiked,
