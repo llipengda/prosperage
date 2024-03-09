@@ -34,8 +34,12 @@ const useFloatLayout = (element: ReactElement, duration: number = 300) => {
     }
 
     const Wrapper = () => {
-      const [show, setShow] = useState(true)
+      const [show, setShow] = useState(false)
       const [unmounted, setUnmounted] = useState(false)
+
+      useEffect(() => {
+        sleep(0).then(() => setShow(true))
+      }, [])
 
       const handleClose = async () => {
         setShow(false)

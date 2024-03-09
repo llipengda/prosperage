@@ -7,21 +7,24 @@ import link from '@/assets/link.svg'
 import wechat from '@/assets/wechat.svg'
 import FloatLayout from '@/components/FloatLayout'
 import TextButton from '@/components/TextButton'
+import usePostsUpdateStore from '@/stores/postsUpdateStore'
 import errorModal from '@/utils/errorModal'
 import sleep from '@/utils/sleep'
 
 interface ShareFloatLayoutProps {
-  /** @hint Will be injected */
+  /** @hint Will be injected by the useFloatLayout hook */
   onClose?: () => void
   id: string | number
 }
 
 function ShareFloatLayout({ onClose = () => {}, id }: ShareFloatLayoutProps) {
+  const update = usePostsUpdateStore(state => state.updatePosts)
+
   const handleShareCommunityFriends = async () => {
-    console.log('share to community friends', id)
     PostApi.share({ postId: Number(id) })
     await Taro.showToast({ title: '分享成功', icon: 'success', duration: 500 })
     await sleep(500)
+    update()
     onClose()
   }
 
