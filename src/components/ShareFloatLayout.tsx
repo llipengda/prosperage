@@ -33,7 +33,7 @@ function ShareFloatLayout({ onClose = () => {}, id }: ShareFloatLayoutProps) {
   })
 
   const handleCopyLink = async () => {
-    await errorModal('此功能仅企业版小程序支持！')
+    await errorModal('此功能仅企业主体的小程序支持！')
     onClose()
   }
 
