@@ -14,7 +14,7 @@ import RoundButton from '@/components/index/RoundButton'
 import SwitchButton from '@/components/index/SwitchButton'
 import useGetByPage from '@/hooks/useGetByPage'
 import usePostsUpdateStore from '@/stores/postsUpdateStore'
-import { navigate } from '@/utils/navigate'
+import { navigate } from '@/utils/routeTools'
 import notImplemented from '@/utils/notImplemented'
 
 export default function Community() {

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import type { ToPage } from '@/utils/navigate'
-import { redirect as _redirect, navigate } from '@/utils/navigate'
+import type { ToPage } from '@/utils/routeTools'
+import { redirect as _redirect, navigate } from '@/utils/routeTools'
 
 type NavigateProps = {
   to: ToPage

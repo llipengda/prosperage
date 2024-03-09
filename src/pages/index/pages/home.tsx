@@ -5,7 +5,7 @@ import Article from '@/components/index/Article'
 import Swiper from '@/components/index/Swiper'
 import Title from '@/components/Title'
 import notImplemented from '@/utils/notImplemented'
-import { navigate } from '@/utils/navigate'
+import { navigate } from '@/utils/routeTools'
 
 export default function Home() {
   const handleClickCustomize = () => {
