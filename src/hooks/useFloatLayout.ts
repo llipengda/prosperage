@@ -1,43 +1,62 @@
-import { type ReactElement, useEffect, useRef } from 'react'
+import {
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import React from 'react'
-import type { PageContainerProps } from '@tarojs/components'
+import { PageContainer, type PageContainerProps } from '@tarojs/components'
 import { mountToPage, unmountFromPage } from '@/utils/DOMTools'
+import sleep from '@/utils/sleep'
 
-const useFloatLayout = (element: ReactElement) => {
+const useFloatLayout = (element: ReactElement, duration: number = 300) => {
   const floatLayoutIdRef = useRef<string | null>(null)
+  const elementRef = useRef(element)
 
-  const unmount = () => {
+  const unmount = useCallback(() => {
     if (floatLayoutIdRef.current) {
       unmountFromPage(floatLayoutIdRef.current)
       floatLayoutIdRef.current = null
     }
-  }
+  }, [])
 
-  const mount = () => {
+  const mount = useCallback(() => {
     if (floatLayoutIdRef.current) {
       return
     }
-    floatLayoutIdRef.current = mountToPage(
-      React.createElement<PageContainerProps>(
-        'page-container',
-        { show: true, round: true, onAfterLeave: unmount },
+
+    const Wrapper = () => {
+      const [show, setShow] = useState(true)
+
+      const handleClose = async () => {
+        setShow(false)
+        await sleep(duration)
+        unmount()
+      }
+
+      return React.createElement<PageContainerProps>(
+        PageContainer,
+        { show: show, round: true, onAfterLeave: unmount, duration },
         React.createElement(
-          element.type,
+          elementRef.current.type,
           {
-            ...element.props,
-            onClose: unmount
+            ...elementRef.current.props,
+            onClose: handleClose
           },
-          null
+          elementRef.current.props.children ?? null
         )
       )
-    )
-  }
+    }
+
+    floatLayoutIdRef.current = mountToPage(React.createElement(Wrapper))
+  }, [duration, unmount])
 
   useEffect(() => {
     return () => {
       unmount()
     }
-  }, [])
+  }, [unmount])
 
   return [mount, unmount] as const
 }

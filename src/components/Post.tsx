@@ -6,11 +6,13 @@ import like from '@/assets/like.svg'
 import likeSelected from '@/assets/like_selected.svg'
 import share from '@/assets/share.svg'
 import { DEFAULT_AVATAR, DEFAULT_NAME } from '@/common/constants'
+import ShareFloatLayout from '@/components/ShareFloatLayout'
+import useFloatLayout from '@/hooks/useFloatLayout'
 import useLike from '@/hooks/useLike'
+import useStopPropagation from '@/hooks/useStopPropagation'
 import useTime from '@/hooks/useTime'
-import { navigate } from '@/utils/navigate'
-import notImplemented from '@/utils/notImplemented'
 import previewImage from '@/utils/previewImage'
+import { navigate } from '@/utils/routeTools'
 
 type PostProps = {
   className?: string
@@ -45,7 +47,9 @@ export function Post({
     ? () => navigate(`/pages/post/post?id=${id}`)
     : () => {}
 
-  const handleShare = notImplemented
+  const [mount] = useFloatLayout(<ShareFloatLayout id={id} />)
+
+  const handleShare = useStopPropagation(mount)
 
   const handleComment = handleClick
 
@@ -83,8 +87,8 @@ export function Post({
       {image && (
         <Image
           src={image}
-          className='h-[400px] mt-[40px]'
-          mode='heightFix'
+          className='w-[400px] h-[400px] mt-[40px]'
+          mode='aspectFill'
           lazyLoad
           onClick={previewImage(image)}
         />
