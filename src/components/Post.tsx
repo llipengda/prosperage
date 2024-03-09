@@ -51,7 +51,11 @@ export function Post({
 
   const handleShare = useStopPropagation(mount)
 
-  const handleComment = handleClick
+  const handleComment = useStopPropagation(() => {
+    if (clickToDetail) {
+      navigate(`/pages/post/post?id=${id}`)
+    }
+  })
 
   const formatTime = useTime()
 
