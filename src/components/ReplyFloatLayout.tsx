@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ScrollView, Text, View } from '@tarojs/components'
 import { ReplyApi } from '@/api'
 import {
@@ -11,7 +11,8 @@ import CommentInput from '@/components/CommentInput'
 import FloatLayout from '@/components/FloatLayout'
 import Title from '@/components/Title'
 import useGetByPage from '@/hooks/useGetByPage'
-import useUpdateCommentsStore from '@/stores/updateCommentsStore'
+import useCommentStore from '@/stores/commentStore'
+import type TReply from '@/types/Reply'
 
 type ReplyFloatLayoutProps = {
   /** @hint Will be injected by the useFloatLayout hook */
@@ -22,18 +23,18 @@ const ReplyFloatLayout: React.FC<ReplyFloatLayoutProps> = ({
   onClose,
   ...comment
 }) => {
+  const [replies, setReplies] = useState<TReply[]>([])
+
   const {
-    data: replies,
-    setData: setReplies,
     get: getReplies,
     refresh,
     refreshing,
     hasMore
-  } = useGetByPage(REPLIES_PER_PAGE, ReplyApi.getList, {
+  } = useGetByPage(REPLIES_PER_PAGE, ReplyApi.getList, true, setReplies, {
     commentId: comment.id
   })
 
-  const updateComments = useUpdateCommentsStore(state => state.updateComments)
+  const updateReplies = useCommentStore(state => state.updateReplies)
 
   const handleSubmit = async (value: string) => {
     const res = await ReplyApi.addReply({
@@ -41,7 +42,7 @@ const ReplyFloatLayout: React.FC<ReplyFloatLayoutProps> = ({
       content: value
     })
     setReplies(r => [...r, res] as typeof replies)
-    updateComments()
+    updateReplies(Number(comment.id), 1)
   }
 
   return (

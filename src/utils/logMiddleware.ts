@@ -20,7 +20,7 @@ const loggerImpl: LoggerImpl = (f, name) => (set, get, store) => {
       set(...a)
       return
     }
-    console.groupCollapsed('Zustand store update')
+    console.group('Zustand store update')
     console.log('Arguments:', ...a)
     console.log('before:')
     console.log(...(name ? [`${name}:`] : []), get())

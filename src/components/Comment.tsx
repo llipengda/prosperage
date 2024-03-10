@@ -10,6 +10,7 @@ import useFloatLayout from '@/hooks/useFloatLayout'
 import useLike from '@/hooks/useLike'
 import useStopPropagation from '@/hooks/useStopPropagation'
 import useTime from '@/hooks/useTime'
+import useCommentStore from '@/stores/commentStore'
 import sleep from '@/utils/sleep'
 
 export type CommentProps = {
@@ -55,7 +56,7 @@ const Comment: React.FC<CommentProps> = ({
   time,
   shares,
   comments,
-  likes: originalLikes,
+  likes,
   liked,
   isReply = false,
   isInFloatLayout = false,
@@ -83,7 +84,7 @@ const Comment: React.FC<CommentProps> = ({
       time={time}
       shares={shares!}
       comments={comments!}
-      likes={originalLikes}
+      likes={likes}
       liked={liked}
     />
   )
@@ -97,12 +98,9 @@ const Comment: React.FC<CommentProps> = ({
 
   const date = useTime(true)
 
-  const { likes, handleLike, isLiked } = useLike(
-    id,
-    liked,
-    originalLikes,
-    isReply ? 3 : 2
-  )
+  const updateCommentLikes = useCommentStore(state => state.updateLikes)
+
+  const handleLike = useLike(id, liked, isReply ? 3 : 2, updateCommentLikes)
 
   return (
     <View className={`flex flex-row ${className}`}>
@@ -155,7 +153,7 @@ const Comment: React.FC<CommentProps> = ({
             )}
             <View className='flex flex-row items-center' onClick={handleLike}>
               <Image
-                src={isLiked ? likeSelected : like}
+                src={liked ? likeSelected : like}
                 className='w-[28px] h-[26px]'
                 mode='aspectFit'
               />

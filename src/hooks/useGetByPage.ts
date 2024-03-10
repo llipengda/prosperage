@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 const useGetByPage = <
   T extends {},
@@ -7,17 +7,24 @@ const useGetByPage = <
 >(
   pageSize: number,
   getFunc: (params: U) => Promise<T[]>,
+  autoCall: boolean,
+  setDataFunc: {
+    (data: Required<T>[]): void
+    (fn: (data: Required<T>[]) => Required<T>[]): void
+  },
   moreParams?: P
 ) => {
-  const [data, setData] = useState<Required<T>[]>([])
   const [hasMore, setHasMore] = useState(true)
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
-  const index = useRef(0)
+  const index = useRef(1)
 
   const moreParamsRef = useRef(moreParams)
 
   const get = useCallback(async () => {
+    if (loading || !hasMore) {
+      return
+    }
     setLoading(true)
     const res = await getFunc({
       page: index.current++,
@@ -27,12 +34,12 @@ const useGetByPage = <
     if (res.length < pageSize) {
       setHasMore(false)
     }
-    setData(prev => [...prev, ...res] as Required<T>[])
+    setDataFunc(prev => [...prev, ...res] as Required<T>[])
     setLoading(false)
-  }, [getFunc, pageSize])
+  }, [getFunc, hasMore, loading, pageSize, setDataFunc])
 
   const refresh = useCallback(async () => {
-    index.current = 0
+    index.current = 1
     setHasMore(true)
     setRefreshing(true)
     setLoading(true)
@@ -44,18 +51,18 @@ const useGetByPage = <
     if (res.length < pageSize) {
       setHasMore(false)
     }
-    setData(res as Required<T>[])
+    setDataFunc(res as Required<T>[])
     setLoading(false)
     setRefreshing(false)
-  }, [getFunc, pageSize])
+  }, [getFunc, pageSize, setDataFunc])
 
   useEffect(() => {
-    refresh()
-  }, [refresh])
+    if (autoCall) {
+      refresh()
+    }
+  }, [autoCall, refresh])
 
   return {
-    data,
-    setData,
     get,
     hasMore,
     setHasMore,

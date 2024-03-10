@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type useGetByPage from '@/hooks/useGetByPage'
 
 type SwitchData<
@@ -16,7 +16,21 @@ const useSwitch = <
 ) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const currentData = datas[currentIndex]
-  const switchTo = useCallback((i: number) => setCurrentIndex(i), [])
+
+  const initRefreshRef = useRef(datas[0].refresh)
+
+  const switchTo = useCallback(
+    (i: number) => {
+      datas[i].refresh()
+      setCurrentIndex(i)
+    },
+    [datas]
+  )
+
+  useEffect(() => {
+    initRefreshRef.current()
+  }, [])
+
   return [currentData, currentIndex, switchTo] as const
 }
 

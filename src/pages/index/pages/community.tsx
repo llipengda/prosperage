@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Image, ScrollView, Text, View } from '@tarojs/components'
 import { PostApi } from '@/api'
 import add from '@/assets/add.svg'
@@ -14,34 +14,28 @@ import RoundButton from '@/components/index/RoundButton'
 import SwitchButton from '@/components/index/SwitchButton'
 import useGetByPage from '@/hooks/useGetByPage'
 import useSwitch from '@/hooks/useSwitch'
-import useUpdatePostsStore from '@/stores/updatePostsStore'
+import usePostStore from '@/stores/postStore'
 import notImplemented from '@/utils/notImplemented'
 import { navigate } from '@/utils/routeTools'
 
 export default function Community() {
+  const posts = usePostStore(state => state.posts)
+  const setPosts = usePostStore(state => state.setPosts)
+
   const [
-    { data: posts, get: getPosts, hasMore, loading, refreshing, refresh },
+    { get: getPosts, hasMore, loading, refreshing, refresh },
     checkedIndex,
     switchTo
   ] = useSwitch(
-    useGetByPage(POSTS_PER_PAGE, PostApi.getList, {
+    useGetByPage(POSTS_PER_PAGE, PostApi.getList, false, setPosts, {
       orderByPopularity: false
     }),
-    useGetByPage(POSTS_PER_PAGE, PostApi.getFriendsPost)
+    useGetByPage(POSTS_PER_PAGE, PostApi.getFriendsPost, false, setPosts)
   )
 
   const handleClickSwitch = switchTo
 
   const handleClickFriendCircle = notImplemented
-
-  const update = useUpdatePostsStore(state => state.update)
-
-  useEffect(() => {
-    if (update === 0) {
-      return
-    }
-    refresh()
-  }, [refresh, update])
 
   const handleClickEarphone = notImplemented
 
@@ -95,7 +89,7 @@ export default function Community() {
         refresherEnabled
         refresherTriggered={refreshing}
         onRefresherRefresh={refresh}
-        onScrollToLower={hasMore ? getPosts : () => {}}
+        onScrollToLower={getPosts}
       >
         {posts.map(post => (
           <Post

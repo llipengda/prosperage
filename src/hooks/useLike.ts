@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LikeApi } from '@/api'
 import useStopPropagation from '@/hooks/useStopPropagation'
 
@@ -8,38 +8,27 @@ import useStopPropagation from '@/hooks/useStopPropagation'
 const useLike = (
   id: string | number,
   liked: boolean,
-  originalLikes: number,
-  type: 1 | 2 | 3
+  type: 1 | 2 | 3,
+  updateLikes: (id: number, isLiked: boolean, delta: number) => void
 ) => {
-  const [isLiked, setIsLiked] = useState(liked)
-  const [addLike, setAddLike] = useState(0)
   const [isLikeDisabled, setIsLikeDisabled] = useState(false)
-
-  useEffect(() => {
-    setIsLiked(liked)
-    setAddLike(0)
-  }, [liked])
 
   const handleLike = useStopPropagation(async () => {
     if (isLikeDisabled) {
       return
     }
     setIsLikeDisabled(true)
-    setIsLiked(!isLiked)
-    setAddLike(liked ? (isLiked ? -1 : 0) : isLiked ? 0 : 1)
-    if (isLiked) {
+    if (liked) {
+      updateLikes(Number(id), false, -1)
       await LikeApi.unlike({ objId: Number(id), type })
     } else {
+      updateLikes(Number(id), true, 1)
       await LikeApi.like({ objId: Number(id), type })
     }
     setIsLikeDisabled(false)
   })
 
-  return {
-    isLiked,
-    likes: addLike + originalLikes,
-    handleLike
-  }
+  return handleLike
 }
 
 export default useLike

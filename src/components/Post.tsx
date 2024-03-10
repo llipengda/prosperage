@@ -11,6 +11,7 @@ import useFloatLayout from '@/hooks/useFloatLayout'
 import useLike from '@/hooks/useLike'
 import useStopPropagation from '@/hooks/useStopPropagation'
 import useTime from '@/hooks/useTime'
+import usePostStore from '@/stores/postStore'
 import previewImage from '@/utils/previewImage'
 import { navigate } from '@/utils/routeTools'
 
@@ -37,7 +38,7 @@ export function Post({
   time,
   content,
   image,
-  likes: originalLikes,
+  likes,
   comments,
   shares,
   liked = false,
@@ -59,7 +60,9 @@ export function Post({
 
   const formatTime = useTime()
 
-  const { isLiked, likes, handleLike } = useLike(id, liked, originalLikes, 1)
+  const updateLikes = usePostStore(state => state.updateLikes)
+
+  const handleLike = useLike(id, liked, 1, updateLikes)
 
   return (
     <View
@@ -112,7 +115,7 @@ export function Post({
         </View>
         <View className='flex flex-row items-center' onClick={handleLike}>
           <Image
-            src={isLiked ? likeSelected : like}
+            src={liked ? likeSelected : like}
             className='w-[42px] h-[42px]'
             mode='aspectFit'
           />

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ScrollView, Text, View } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useReachBottom } from '@tarojs/taro'
 import { CommentApi, PostApi } from '@/api'
 import {
   COMMENTS_PER_PAGE,
@@ -14,41 +14,45 @@ import Navigate from '@/components/Navigate'
 import { Post } from '@/components/Post'
 import Title from '@/components/Title'
 import useGetByPage from '@/hooks/useGetByPage'
-import useUpdateComments from '@/hooks/useUpdateComments'
-import useUpdatePostsStore from '@/stores/updatePostsStore'
+import useCommentStore from '@/stores/commentStore'
+import usePostStore from '@/stores/postStore'
 import type TComment from '@/types/Comment'
 import type TPost from '@/types/Post'
 
 const PPost = () => {
   const id = Taro.useRouter().params?.id
 
-  const [post, setPost] = useState<TPost | null>(null)
+  const [post, setPost] = useState<null | TPost>(null)
 
-  const shouldUpdatePost = useUpdatePostsStore(state => state.update)
+  const cachedPost = usePostStore(state =>
+    state.posts.find(p => p.id === Number(id))
+  )
 
   useEffect(() => {
-    if (!id) {
-      return
+    if (cachedPost) {
+      setPost(cachedPost)
+    } else {
+      PostApi.getDetail({ postId: Number(id) }).then(res =>
+        setPost(res as TPost)
+      )
     }
-    PostApi.getDetail({ postId: Number(id) }).then(res => setPost(res as TPost))
-  }, [id, shouldUpdatePost])
+  }, [cachedPost, id])
+
+  const comments = useCommentStore(state => state.comments)
+  const setComments = useCommentStore(state => state.setComments)
 
   const {
-    data: comments,
-    setData: setComments,
     get: getComments,
     loading,
-    refresh,
-    refreshing,
     hasMore
-  } = useGetByPage(COMMENTS_PER_PAGE, CommentApi.getList, {
+  } = useGetByPage(COMMENTS_PER_PAGE, CommentApi.getList, true, setComments, {
     objId: Number(id),
     type: 1
   })
 
-  useUpdateComments(refresh)
+  useReachBottom(getComments)
 
-  const updatePosts = useUpdatePostsStore(state => state.updatePosts)
+  const updatePostComments = usePostStore(state => state.updateComments)
 
   const handleSubmitComment = useCallback(
     async (value: string) => {
@@ -58,9 +62,9 @@ const PPost = () => {
         content: value
       })) as TComment
       setComments(c => [...c, comment])
-      updatePosts()
+      updatePostComments(Number(id), 1)
     },
-    [id, setComments, updatePosts]
+    [id, setComments, updatePostComments]
   )
 
   if (!id) {
@@ -95,9 +99,6 @@ const PPost = () => {
         showScrollbar={false}
         enableFlex
         scrollWithAnimation
-        refresherEnabled
-        refresherTriggered={refreshing}
-        onRefresherRefresh={refresh}
         onScrollToLower={hasMore ? getComments : () => {}}
       >
         {comments.map(comment => (
