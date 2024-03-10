@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Image, ScrollView, Text, View } from '@tarojs/components'
 import { PostApi } from '@/api'
 import add from '@/assets/add.svg'
@@ -13,29 +13,26 @@ import Search from '@/components/Search'
 import RoundButton from '@/components/index/RoundButton'
 import SwitchButton from '@/components/index/SwitchButton'
 import useGetByPage from '@/hooks/useGetByPage'
+import useSwitch from '@/hooks/useSwitch'
 import useUpdatePostsStore from '@/stores/updatePostsStore'
 import notImplemented from '@/utils/notImplemented'
 import { navigate } from '@/utils/routeTools'
 
 export default function Community() {
-  const [checked, setChecked] = useState(0)
+  const [
+    { data: posts, get: getPosts, hasMore, loading, refreshing, refresh },
+    checkedIndex,
+    switchTo
+  ] = useSwitch(
+    useGetByPage(POSTS_PER_PAGE, PostApi.getList, {
+      orderByPopularity: false
+    }),
+    useGetByPage(POSTS_PER_PAGE, PostApi.getFriendsPost)
+  )
 
-  const handleClickSwitch = (index: number) => () => {
-    setChecked(index)
-  }
+  const handleClickSwitch = switchTo
 
   const handleClickFriendCircle = notImplemented
-
-  const {
-    data: posts,
-    get: getPosts,
-    hasMore,
-    loading,
-    refreshing,
-    refresh
-  } = useGetByPage(POSTS_PER_PAGE, PostApi.getList, {
-    orderByPopularity: false
-  })
 
   const update = useUpdatePostsStore(state => state.update)
 
@@ -57,30 +54,37 @@ export default function Community() {
       <View className='h-[326px] bg-primary flex flex-col'>
         <Search className='mx-[40px] mt-[196px]' />
       </View>
-      <View className='flex flex-row box-border py-[40px] px-[40px] bg-white sticky top-0'>
-        <SwitchButton
-          icon={hot}
-          text='热门'
-          checked={checked === 0}
-          onClick={handleClickSwitch(0)}
-        />
-        <SwitchButton
-          className='ml-[42px]'
-          icon={friend}
-          text='好友'
-          checked={checked === 1}
-          onClick={handleClickSwitch(1)}
-        />
-        <View
-          className='absolute right-[40px] top-[50px] flex items-center justify-center'
-          onClick={handleClickFriendCircle}
-        >
-          <Image className='w-[40px] h-[40px]' mode='aspectFit' src={add} />
-          <Text className='text-[24px] leading-[30.48px] text-primary text-center ml-[10px]'>
-            好友圈
-          </Text>
-        </View>
-      </View>
+      {useMemo(
+        () => (
+          <View className='flex flex-row box-border py-[40px] px-[40px] bg-white sticky top-0'>
+            <SwitchButton
+              index={0}
+              icon={hot}
+              text='热门'
+              activeIndex={checkedIndex}
+              onClick={handleClickSwitch}
+            />
+            <SwitchButton
+              index={1}
+              className='ml-[42px]'
+              icon={friend}
+              text='好友'
+              activeIndex={checkedIndex}
+              onClick={handleClickSwitch}
+            />
+            <View
+              className='absolute right-[40px] top-[50px] flex items-center justify-center'
+              onClick={handleClickFriendCircle}
+            >
+              <Image className='w-[40px] h-[40px]' mode='aspectFit' src={add} />
+              <Text className='text-[24px] leading-[30.48px] text-primary text-center ml-[10px]'>
+                好友圈
+              </Text>
+            </View>
+          </View>
+        ),
+        [checkedIndex, handleClickFriendCircle, handleClickSwitch]
+      )}
       <ScrollView
         className='flex flex-col w-screen h-[calc(100vh-484px-env(safe-area-inset-bottom)-142px-5px)] pt-[20px]'
         scrollY
