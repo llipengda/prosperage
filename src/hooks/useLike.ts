@@ -3,13 +3,13 @@ import { LikeApi } from '@/api'
 import useStopPropagation from '@/hooks/useStopPropagation'
 
 /**
- * @param type 1: post, 2: comment
+ * @param type 1: post, 2: comment, 3: reply
  */
 const useLike = (
   id: string | number,
   liked: boolean,
   originalLikes: number,
-  type: 1 | 2
+  type: 1 | 2 | 3
 ) => {
   const [isLiked, setIsLiked] = useState(liked)
   const [addLike, setAddLike] = useState(0)
