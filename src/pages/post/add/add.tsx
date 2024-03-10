@@ -6,7 +6,7 @@ import imageIcon from '@/assets/image.svg'
 import BackButton from '@/components/BackButton'
 import NavigationBarTitle from '@/components/NavigationBarTitle'
 import TextButton from '@/components/TextButton'
-import usePostsUpdateStore from '@/stores/postsUpdateStore'
+import useUpdatePostsStore from '@/stores/updatePostsStore'
 import sleep from '@/utils/sleep'
 
 const Add = () => {
@@ -24,7 +24,7 @@ const Add = () => {
     Taro.hideLoading()
   }
 
-  const updatePosts = usePostsUpdateStore(state => state.updatePosts)
+  const updatePosts = useUpdatePostsStore(state => state.updatePosts)
 
   const handleSendPost = async () => {
     await PostApi.addPost({ content: value, image })

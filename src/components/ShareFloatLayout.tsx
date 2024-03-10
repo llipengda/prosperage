@@ -7,7 +7,8 @@ import link from '@/assets/link.svg'
 import wechat from '@/assets/wechat.svg'
 import FloatLayout from '@/components/FloatLayout'
 import TextButton from '@/components/TextButton'
-import usePostsUpdateStore from '@/stores/postsUpdateStore'
+import useUpdateCommentsStore from '@/stores/updateCommentsStore'
+import useUpdatePostsStore from '@/stores/updatePostsStore'
 import errorModal from '@/utils/errorModal'
 import sleep from '@/utils/sleep'
 
@@ -23,18 +24,20 @@ function ShareFloatLayout({
   id,
   type
 }: ShareFloatLayoutProps) {
-  const update = usePostsUpdateStore(state => state.updatePosts)
+  const updatePosts = useUpdatePostsStore(state => state.updatePosts)
+  const updateComments = useUpdateCommentsStore(state => state.updateComments)
 
   const handleShareCommunityFriends = async () => {
     if (type === 'post') {
       await PostApi.share({ postId: Number(id) })
+      updatePosts()
     } else if (type === 'comment') {
       await CommentApi.share({ commentId: Number(id) })
+      updateComments()
     }
+    onClose()
     await Taro.showToast({ title: '分享成功', icon: 'success', duration: 500 })
     await sleep(500)
-    update()
-    onClose()
   }
 
   Taro.useShareAppMessage(() => {

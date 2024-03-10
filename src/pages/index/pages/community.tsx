@@ -13,7 +13,7 @@ import Search from '@/components/Search'
 import RoundButton from '@/components/index/RoundButton'
 import SwitchButton from '@/components/index/SwitchButton'
 import useGetByPage from '@/hooks/useGetByPage'
-import usePostsUpdateStore from '@/stores/postsUpdateStore'
+import useUpdatePostsStore from '@/stores/updatePostsStore'
 import notImplemented from '@/utils/notImplemented'
 import { navigate } from '@/utils/routeTools'
 
@@ -37,7 +37,7 @@ export default function Community() {
     orderByPopularity: false
   })
 
-  const update = usePostsUpdateStore(state => state.update)
+  const update = useUpdatePostsStore(state => state.update)
 
   useEffect(() => {
     if (update === 0) {

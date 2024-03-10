@@ -4,7 +4,10 @@ import comment from '@/assets/comment.svg'
 import like from '@/assets/like.svg'
 import likeSelected from '@/assets/like_selected.svg'
 import share from '@/assets/share.svg'
+import ShareFloatLayout from '@/components/ShareFloatLayout'
+import useFloatLayout from '@/hooks/useFloatLayout'
 import useLike from '@/hooks/useLike'
+import useStopPropagation from '@/hooks/useStopPropagation'
 import useTime from '@/hooks/useTime'
 import notImplemented from '@/utils/notImplemented'
 
@@ -33,7 +36,9 @@ const Comment: React.FC<CommentProps> = ({
   likes: originalLikes,
   liked
 }) => {
-  const handleShare = notImplemented
+  const [mount] = useFloatLayout(<ShareFloatLayout id={id} type='comment' />)
+
+  const handleShare = useStopPropagation(mount)
 
   const handleComment = notImplemented
 
