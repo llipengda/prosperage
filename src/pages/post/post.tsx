@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ScrollView, Text, View } from '@tarojs/components'
-import Taro, { useDidHide } from '@tarojs/taro'
+import Taro from '@tarojs/taro'
 import { CommentApi, PostApi } from '@/api'
 import {
   COMMENTS_PER_PAGE,
@@ -14,7 +14,7 @@ import Navigate from '@/components/Navigate'
 import { Post } from '@/components/Post'
 import Title from '@/components/Title'
 import useGetByPage from '@/hooks/useGetByPage'
-import useUpdateCommentsStore from '@/stores/updateCommentsStore'
+import useUpdateComments from '@/hooks/useUpdateComments'
 import useUpdatePostsStore from '@/stores/updatePostsStore'
 import type TComment from '@/types/Comment'
 import type TPost from '@/types/Post'
@@ -24,12 +24,14 @@ const PPost = () => {
 
   const [post, setPost] = useState<TPost | null>(null)
 
+  const shouldUpdatePost = useUpdatePostsStore(state => state.update)
+
   useEffect(() => {
     if (!id) {
       return
     }
     PostApi.getDetail({ postId: Number(id) }).then(res => setPost(res as TPost))
-  }, [id])
+  }, [id, shouldUpdatePost])
 
   const {
     data: comments,
@@ -44,18 +46,7 @@ const PPost = () => {
     type: 1
   })
 
-  const update = useUpdateCommentsStore(state => state.update)
-
-  useEffect(() => {
-    if (update === 0) {
-      return
-    }
-    refresh()
-  }, [refresh, update])
-
-  const reset = useUpdateCommentsStore(state => state.reset)
-
-  useDidHide(() => reset())
+  useUpdateComments(refresh)
 
   const updatePosts = useUpdatePostsStore(state => state.updatePosts)
 
