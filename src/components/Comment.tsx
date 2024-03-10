@@ -11,6 +11,7 @@ import useLike from '@/hooks/useLike'
 import useStopPropagation from '@/hooks/useStopPropagation'
 import useTime from '@/hooks/useTime'
 import useCommentStore from '@/stores/commentStore'
+import useReplyStore from '@/stores/replyStore'
 import sleep from '@/utils/sleep'
 
 export type CommentProps = {
@@ -75,18 +76,7 @@ const Comment: React.FC<CommentProps> = ({
   })
 
   const [showReply] = useFloatLayout(
-    <ReplyFloatLayout
-      id={id}
-      postId={postId}
-      avatar={avatar}
-      userName={userName}
-      content={content}
-      time={time}
-      shares={shares!}
-      comments={comments!}
-      likes={likes}
-      liked={liked}
-    />
+    <ReplyFloatLayout commentId={id} postId={postId} />
   )
 
   const handleComment = useStopPropagation(() => {
@@ -96,14 +86,22 @@ const Comment: React.FC<CommentProps> = ({
     showReply()
   })
 
+  const handleClick = handleComment
+
   const date = useTime(true)
 
   const updateCommentLikes = useCommentStore(state => state.updateLikes)
+  const updateReplyLikes = useReplyStore(state => state.updateLikes)
 
-  const handleLike = useLike(id, liked, isReply ? 3 : 2, updateCommentLikes)
+  const handleLike = useLike(
+    id,
+    liked,
+    isReply ? 3 : 2,
+    isReply ? updateReplyLikes : updateCommentLikes
+  )
 
   return (
-    <View className={`flex flex-row ${className}`}>
+    <View className={`flex flex-row ${className}`} onClick={handleClick}>
       <View>
         <Image
           className='h-[94px] w-[94px] rounded-full shadow-[0_8px_24px_0_#00000040]'

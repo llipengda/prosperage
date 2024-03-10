@@ -73,6 +73,10 @@ const PPost = () => {
     )
   }
 
+  if (!post) {
+    return null
+  }
+
   return (
     <View className='relative'>
       <View className='h-[406px] w-screen bg-gradient-to-b from-primary from-0%' />
@@ -80,15 +84,15 @@ const PPost = () => {
       <Post
         className='shadow-none'
         id={id}
-        userAvatar={post?.avatar || DEFAULT_AVATAR}
-        userName={post?.name || DEFAULT_NAME}
-        content={post?.content || '加载中'}
-        time={post?.updateTime || Date.now().toString()}
-        likes={post?.likes || 0}
-        liked={post?.isLiked}
-        comments={post?.comments || 0}
-        shares={post?.shares || 0}
-        image={post?.image}
+        userAvatar={post.avatar || DEFAULT_AVATAR}
+        userName={post.name || DEFAULT_NAME}
+        content={post.content || '加载中'}
+        time={post.updateTime || Date.now().toString()}
+        likes={post.likes || 0}
+        liked={post.isLiked}
+        comments={post.comments || 0}
+        shares={post.shares || 0}
+        image={post.image}
         clickToDetail={false}
       />
       <Title text='评论' className='mt-[70px] mx-[48px]' />

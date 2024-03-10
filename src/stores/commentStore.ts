@@ -8,7 +8,6 @@ type CommentStore = {
     (comments: TComment[]): void
     (fn: (comments: TComment[]) => TComment[]): void
   }
-  clearComments: () => void
   updateLikes: (id: number, isLiked: boolean, delta: number) => void
   updateShares: (id: number, delta: number) => void
   updateReplies: (id: number, delta: number) => void
@@ -24,7 +23,6 @@ const useCommentStore = create<CommentStore>()(
         set({ comments: commentsOrFn })
       }
     },
-    clearComments: () => set({ comments: [] }),
     updateLikes: (id, isLiked, delta) =>
       set(state => ({
         comments: state.comments.map(comment =>

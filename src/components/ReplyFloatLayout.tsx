@@ -1,29 +1,48 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ScrollView, Text, View } from '@tarojs/components'
-import { ReplyApi } from '@/api'
+import { CommentApi, ReplyApi } from '@/api'
 import {
   DEFAULT_AVATAR,
   DEFAULT_NAME,
   REPLIES_PER_PAGE
 } from '@/common/constants'
-import Comment, { type CommentProps } from '@/components/Comment'
+import Comment from '@/components/Comment'
 import CommentInput from '@/components/CommentInput'
 import FloatLayout from '@/components/FloatLayout'
 import Title from '@/components/Title'
 import useGetByPage from '@/hooks/useGetByPage'
 import useCommentStore from '@/stores/commentStore'
-import type TReply from '@/types/Reply'
+import useReplyStore from '@/stores/replyStore'
+import TComment from '@/types/Comment'
 
 type ReplyFloatLayoutProps = {
   /** @hint Will be injected by the useFloatLayout hook */
   onClose?: () => void
-} & CommentProps
+  commentId: string | number
+  postId: string | number
+}
 
 const ReplyFloatLayout: React.FC<ReplyFloatLayoutProps> = ({
   onClose,
-  ...comment
+  commentId,
+  postId
 }) => {
-  const [replies, setReplies] = useState<TReply[]>([])
+  const [comment, setComment] = useState<TComment | null>(null)
+  const cachedComment = useCommentStore(state =>
+    state.comments.find(c => c.id === Number(commentId))
+  )
+  useEffect(() => {
+    if (cachedComment) {
+      setComment(cachedComment)
+    } else {
+      CommentApi.getDetail({ commentId: Number(commentId), type: 1 }).then(
+        res => setComment(res as TComment)
+      )
+    }
+  }, [cachedComment, commentId])
+
+  const replies = useReplyStore(state => state.replies)
+  const setReplies = useReplyStore(state => state.setReplies)
 
   const {
     get: getReplies,
@@ -31,18 +50,25 @@ const ReplyFloatLayout: React.FC<ReplyFloatLayoutProps> = ({
     refreshing,
     hasMore
   } = useGetByPage(REPLIES_PER_PAGE, ReplyApi.getList, true, setReplies, {
-    commentId: comment.id
+    commentId: commentId
   })
 
   const updateReplies = useCommentStore(state => state.updateReplies)
 
-  const handleSubmit = async (value: string) => {
-    const res = await ReplyApi.addReply({
-      commentId: Number(comment.id),
-      content: value
-    })
-    setReplies(r => [...r, res] as typeof replies)
-    updateReplies(Number(comment.id), 1)
+  const handleSubmit = useCallback(
+    async (value: string) => {
+      const res = await ReplyApi.addReply({
+        commentId: Number(commentId),
+        content: value
+      })
+      setReplies(r => [...r, res] as typeof replies)
+      updateReplies(Number(commentId), 1)
+    },
+    [commentId, setReplies, updateReplies]
+  )
+
+  if (!comment) {
+    return null
   }
 
   return (
@@ -54,7 +80,16 @@ const ReplyFloatLayout: React.FC<ReplyFloatLayoutProps> = ({
     >
       <Comment
         className='mt-[50px]'
-        {...comment}
+        id={commentId}
+        postId={postId}
+        avatar={comment.avatar || DEFAULT_AVATAR}
+        userName={comment.name || DEFAULT_NAME}
+        content={comment.content!}
+        time={comment.createTime!}
+        likes={comment.likes!}
+        liked={comment.isLiked!}
+        shares={comment.shares!}
+        comments={comment.replies!}
         isInFloatLayout
         closeFloatLayout={onClose!}
       />
@@ -76,7 +111,7 @@ const ReplyFloatLayout: React.FC<ReplyFloatLayoutProps> = ({
             className='mb-[20px]'
             key={reply.id}
             id={reply.id}
-            postId={comment.postId}
+            postId={postId}
             avatar={reply.avatar || DEFAULT_AVATAR}
             userName={reply.name || DEFAULT_NAME}
             content={reply.content}

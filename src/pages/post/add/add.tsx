@@ -6,7 +6,8 @@ import imageIcon from '@/assets/image.svg'
 import BackButton from '@/components/BackButton'
 import NavigationBarTitle from '@/components/NavigationBarTitle'
 import TextButton from '@/components/TextButton'
-import useUpdatePostsStore from '@/stores/updatePostsStore'
+import usePostStore from '@/stores/postStore'
+import type TPost from '@/types/Post'
 import sleep from '@/utils/sleep'
 
 const Add = () => {
@@ -24,13 +25,13 @@ const Add = () => {
     Taro.hideLoading()
   }
 
-  const updatePosts = useUpdatePostsStore(state => state.updatePosts)
+  const setPosts = usePostStore(state => state.setPosts)
 
   const handleSendPost = async () => {
-    await PostApi.addPost({ content: value, image })
+    const post = await PostApi.addPost({ content: value, image })
     await Taro.showToast({ title: '发送成功', icon: 'success', duration: 800 })
     await sleep(800)
-    updatePosts()
+    setPosts(p => [post, ...p] as TPost[])
     Taro.navigateBack()
   }
 
