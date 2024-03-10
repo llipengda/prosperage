@@ -103,8 +103,9 @@ const PPost = () => {
         {comments.map(comment => (
           <Comment
             id={comment.id}
+            postId={id}
             key={comment.id}
-            className='mx-[48px] mb-[14px]'
+            className='mx-[48px] mb-[20px]'
             avatar={DEFAULT_AVATAR}
             userName={DEFAULT_NAME}
             content={comment.content}

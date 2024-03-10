@@ -14,6 +14,7 @@ import notImplemented from '@/utils/notImplemented'
 type CommentProps = {
   className?: string
   id: string | number
+  postId: string | number
   avatar: string
   userName: string
   content: string
@@ -26,6 +27,7 @@ type CommentProps = {
 
 const Comment: React.FC<CommentProps> = ({
   id,
+  postId,
   className,
   avatar,
   userName,
@@ -36,7 +38,9 @@ const Comment: React.FC<CommentProps> = ({
   likes: originalLikes,
   liked
 }) => {
-  const [mount] = useFloatLayout(<ShareFloatLayout id={id} type='comment' />)
+  const [mount] = useFloatLayout(
+    <ShareFloatLayout id={id} type='comment' postId={postId} />
+  )
 
   const handleShare = useStopPropagation(mount)
 

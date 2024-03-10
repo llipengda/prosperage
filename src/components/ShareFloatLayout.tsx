@@ -12,17 +12,27 @@ import useUpdatePostsStore from '@/stores/updatePostsStore'
 import errorModal from '@/utils/errorModal'
 import sleep from '@/utils/sleep'
 
-interface ShareFloatLayoutProps {
-  /** @hint Will be injected by the useFloatLayout hook */
-  onClose?: () => void
-  id: string | number
-  type: 'post' | 'comment'
-}
+type ShareFloatLayoutProps =
+  | {
+      /** @hint Will be injected by the useFloatLayout hook */
+      onClose?: () => void
+      id: string | number
+      postId?: never
+      type: 'post'
+    }
+  | {
+      /** @hint Will be injected by the useFloatLayout hook */
+      onClose?: () => void
+      id: string | number
+      postId: string | number
+      type: 'comment'
+    }
 
 function ShareFloatLayout({
   onClose = () => {},
   id,
-  type
+  type,
+  postId
 }: ShareFloatLayoutProps) {
   const updatePosts = useUpdatePostsStore(state => state.updatePosts)
   const updateComments = useUpdateCommentsStore(state => state.updateComments)
@@ -43,7 +53,10 @@ function ShareFloatLayout({
   Taro.useShareAppMessage(() => {
     return {
       title: '好友分享了帖子 - 智享盈年',
-      path: `/pages/post/post?id=${id}`
+      path:
+        type === 'post'
+          ? `/pages/post/post?id=${id}`
+          : `/pages/post/post?id=${postId}&commentId=${id}`
     }
   })
 
