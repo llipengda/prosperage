@@ -5,8 +5,10 @@ import './app.scss'
 
 function App({ children }: PropsWithChildren<any>) {
   useLaunch(() => {
-    Taro.addInterceptor(Taro.interceptors.logInterceptor)
-    Taro.addInterceptor(Taro.interceptors.timeoutInterceptor)
+    if (process.env.NODE_ENV === 'development') {
+      Taro.addInterceptor(Taro.interceptors.logInterceptor)
+      Taro.addInterceptor(Taro.interceptors.timeoutInterceptor)
+    }
     Taro.addInterceptor(interceptor)
 
     console.log('App launched.')

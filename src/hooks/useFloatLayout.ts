@@ -52,7 +52,13 @@ const useFloatLayout = (element: ReactElement, duration: number = 300) => {
         ? null
         : React.createElement<PageContainerProps>(
             PageContainer,
-            { show, round: true, onAfterLeave: handleClose, duration },
+            {
+              show,
+              round: true,
+              onAfterLeave: handleClose,
+              closeOnSlideDown: true,
+              duration
+            },
             React.createElement(
               elementRef.current.type,
               {
