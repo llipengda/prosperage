@@ -1,7 +1,7 @@
-import type { CommentApi } from '@/api'
+import type { CommentApi, Expand } from '@/api'
 
-type TComment = Required<
-  Awaited<ReturnType<(typeof CommentApi)['getList']>>[number]
+type TComment = Expand<
+  Required<Awaited<ReturnType<(typeof CommentApi)['getList']>>[number]>
 >
 
 export default TComment
