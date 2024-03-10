@@ -14,36 +14,39 @@ type PostStore = {
 }
 
 const usePostStore = create<PostStore>()(
-  logger(set => ({
-    posts: [] as TPost[],
-    setPosts: postsOrFn => {
-      if (typeof postsOrFn === 'function') {
-        set(state => ({ posts: postsOrFn(state.posts) }))
-      } else {
-        set({ posts: postsOrFn })
-      }
-    },
-    updateLikes: (id, isLiked, delta) =>
-      set(state => ({
-        posts: state.posts.map(post =>
-          post.id === id
-            ? { ...post, isLiked, likes: delta + post.likes }
-            : post
-        )
-      })),
-    updateShares: (id, delta) =>
-      set(state => ({
-        posts: state.posts.map(post =>
-          post.id === id ? { ...post, shares: delta + post.shares } : post
-        )
-      })),
-    updateComments: (id, delta) =>
-      set(state => ({
-        posts: state.posts.map(post =>
-          post.id === id ? { ...post, comments: delta + post.comments } : post
-        )
-      }))
-  }))
+  logger(
+    set => ({
+      posts: [] as TPost[],
+      setPosts: postsOrFn => {
+        if (typeof postsOrFn === 'function') {
+          set(state => ({ posts: postsOrFn(state.posts) }))
+        } else {
+          set({ posts: postsOrFn })
+        }
+      },
+      updateLikes: (id, isLiked, delta) =>
+        set(state => ({
+          posts: state.posts.map(post =>
+            post.id === id
+              ? { ...post, isLiked, likes: delta + post.likes }
+              : post
+          )
+        })),
+      updateShares: (id, delta) =>
+        set(state => ({
+          posts: state.posts.map(post =>
+            post.id === id ? { ...post, shares: delta + post.shares } : post
+          )
+        })),
+      updateComments: (id, delta) =>
+        set(state => ({
+          posts: state.posts.map(post =>
+            post.id === id ? { ...post, comments: delta + post.comments } : post
+          )
+        }))
+    }),
+    'postStore'
+  )
 )
 
 export default usePostStore

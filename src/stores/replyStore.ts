@@ -12,24 +12,27 @@ type ReplyStore = {
 }
 
 const useReplyStore = create<ReplyStore>()(
-  logger(set => ({
-    replies: [] as TReply[],
-    setReplies: repliesOrFn => {
-      if (typeof repliesOrFn === 'function') {
-        set(state => ({ replies: repliesOrFn(state.replies) }))
-      } else {
-        set({ replies: repliesOrFn })
-      }
-    },
-    updateLikes: (id, isLiked, delta) =>
-      set(state => ({
-        replies: state.replies.map(comment =>
-          comment.id === id
-            ? { ...comment, isLiked, likes: delta + comment.likes }
-            : comment
-        )
-      }))
-  }))
+  logger(
+    set => ({
+      replies: [] as TReply[],
+      setReplies: repliesOrFn => {
+        if (typeof repliesOrFn === 'function') {
+          set(state => ({ replies: repliesOrFn(state.replies) }))
+        } else {
+          set({ replies: repliesOrFn })
+        }
+      },
+      updateLikes: (id, isLiked, delta) =>
+        set(state => ({
+          replies: state.replies.map(comment =>
+            comment.id === id
+              ? { ...comment, isLiked, likes: delta + comment.likes }
+              : comment
+          )
+        }))
+    }),
+    'replyStore'
+  )
 )
 
 export default useReplyStore

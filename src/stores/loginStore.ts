@@ -13,13 +13,16 @@ type LoginStore = {
 
 const useLoginStore = create<LoginStore>()(
   persist(
-    logger(set => ({
-      token: undefined as string | undefined,
-      phone: undefined as string | undefined,
-      setPhone: phone => set({ phone }),
-      setToken: token => set({ token }),
-      removeToken: () => set({ token: undefined })
-    })),
+    logger(
+      set => ({
+        token: undefined as string | undefined,
+        phone: undefined as string | undefined,
+        setPhone: phone => set({ phone }),
+        setToken: token => set({ token }),
+        removeToken: () => set({ token: undefined })
+      }),
+      'loginStore'
+    ),
     {
       name: 'login-store',
       storage: createJSONStorage(() => TaroStorage)

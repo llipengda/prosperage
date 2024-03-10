@@ -20,13 +20,29 @@ const loggerImpl: LoggerImpl = (f, name) => (set, get, store) => {
       set(...a)
       return
     }
-    console.group('Zustand store update')
-    console.log('Arguments:', ...a)
-    console.log('before:')
-    console.log(...(name ? [`${name}:`] : []), get())
+    console.group(
+      `%cZustand store update${name ? ` - ${name}` : ''}`,
+      'color: #03A9F4; font-weight: bold;'
+    )
+    const before = get() as Record<string, unknown>
     set(...a)
-    console.log('after:')
-    console.log(...(name ? [`${name}:`] : []), get())
+    const after = get() as Record<string, unknown>
+    let changed = false
+    Object.keys(before).forEach(key => {
+      if (before[key] !== after[key]) {
+        console.log(
+          `%c${key}:`,
+          'color: #4CAF50; font-weight: bold;',
+          before[key],
+          '->',
+          after[key]
+        )
+        changed = true
+      }
+    })
+    if (!changed) {
+      console.log('%c(nothing changed)', 'color: #9E9E9E;')
+    }
     console.groupEnd()
   }
   store.setState = loggedSet

@@ -30,11 +30,14 @@ const initUser: TUser = {
 
 const useUserStore = create<UserStore>()(
   persist(
-    logger(set => ({
-      ...initUser,
-      setInfo: info => set(info),
-      logout: () => set(initUser)
-    })),
+    logger(
+      set => ({
+        ...initUser,
+        setInfo: info => set(info),
+        logout: () => set(initUser)
+      }),
+      'userStore'
+    ),
     {
       name: 'user-store',
       storage: createJSONStorage(() => TaroStorage)

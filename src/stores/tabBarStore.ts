@@ -12,18 +12,24 @@ let _useTabBarStore: UseBoundStore<StoreApi<TabBarStore>>
 
 if (process.env.NODE_ENV === 'production') {
   _useTabBarStore = create<TabBarStore>()(
-    logger(set => ({
-      active: 0,
-      setActive: active => set({ active })
-    }))
+    logger(
+      set => ({
+        active: 0,
+        setActive: active => set({ active })
+      }),
+      'tabBarStore'
+    )
   )
 } else {
   _useTabBarStore = create<TabBarStore>()(
     persist(
-      logger(set => ({
-        active: 0,
-        setActive: active => set({ active })
-      })),
+      logger(
+        set => ({
+          active: 0,
+          setActive: active => set({ active })
+        }),
+        'tabBarStore'
+      ),
       {
         name: 'tab-bar-store',
         storage: createJSONStorage(() => TaroStorage)

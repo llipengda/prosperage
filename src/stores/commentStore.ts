@@ -14,40 +14,43 @@ type CommentStore = {
 }
 
 const useCommentStore = create<CommentStore>()(
-  logger(set => ({
-    comments: [] as TComment[],
-    setComments: commentsOrFn => {
-      if (typeof commentsOrFn === 'function') {
-        set(state => ({ comments: commentsOrFn(state.comments) }))
-      } else {
-        set({ comments: commentsOrFn })
-      }
-    },
-    updateLikes: (id, isLiked, delta) =>
-      set(state => ({
-        comments: state.comments.map(comment =>
-          comment.id === id
-            ? { ...comment, isLiked, likes: delta + comment.likes }
-            : comment
-        )
-      })),
-    updateShares: (id, delta) =>
-      set(state => ({
-        comments: state.comments.map(comment =>
-          comment.id === id
-            ? { ...comment, shares: delta + comment.shares }
-            : comment
-        )
-      })),
-    updateReplies: (id, delta) =>
-      set(state => ({
-        comments: state.comments.map(comment =>
-          comment.id === id
-            ? { ...comment, replies: delta + comment.replies }
-            : comment
-        )
-      }))
-  }))
+  logger(
+    set => ({
+      comments: [] as TComment[],
+      setComments: commentsOrFn => {
+        if (typeof commentsOrFn === 'function') {
+          set(state => ({ comments: commentsOrFn(state.comments) }))
+        } else {
+          set({ comments: commentsOrFn })
+        }
+      },
+      updateLikes: (id, isLiked, delta) =>
+        set(state => ({
+          comments: state.comments.map(comment =>
+            comment.id === id
+              ? { ...comment, isLiked, likes: delta + comment.likes }
+              : comment
+          )
+        })),
+      updateShares: (id, delta) =>
+        set(state => ({
+          comments: state.comments.map(comment =>
+            comment.id === id
+              ? { ...comment, shares: delta + comment.shares }
+              : comment
+          )
+        })),
+      updateReplies: (id, delta) =>
+        set(state => ({
+          comments: state.comments.map(comment =>
+            comment.id === id
+              ? { ...comment, replies: delta + comment.replies }
+              : comment
+          )
+        }))
+    }),
+    'commentStore'
+  )
 )
 
 export default useCommentStore
