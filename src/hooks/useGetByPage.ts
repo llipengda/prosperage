@@ -1,16 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { Expand } from '@/api'
 
 const useGetByPage = <
   T extends {},
-  U extends { page: number; pageSize: number; [key: string]: any },
-  P extends Partial<Record<keyof U, any>>
+  U extends { page: number; pageSize: number; [key: string]: unknown },
+  P extends Partial<Omit<U, 'page' | 'pageSize'>>,
+  S extends Expand<Required<T>[]>
 >(
   pageSize: number,
-  getFunc: (params: U) => Promise<T[]>,
+  getFunc: (params: U) => Promise<T[] | S>,
   autoCall: boolean,
   setDataFunc: {
-    (data: Required<T>[]): void
-    (fn: (data: Required<T>[]) => Required<T>[]): void
+    (data: S): void
+    (fn: (data: S) => S): void
   },
   moreParams?: P
 ) => {
@@ -34,7 +36,7 @@ const useGetByPage = <
     if (res.length < pageSize) {
       setHasMore(false)
     }
-    setDataFunc(prev => [...prev, ...res] as Required<T>[])
+    setDataFunc(prev => [...prev, ...res] as S)
     setLoading(false)
   }, [getFunc, hasMore, loading, pageSize, setDataFunc])
 
@@ -51,7 +53,7 @@ const useGetByPage = <
     if (res.length < pageSize) {
       setHasMore(false)
     }
-    setDataFunc(res as Required<T>[])
+    setDataFunc(res as S)
     setLoading(false)
     setRefreshing(false)
   }, [getFunc, pageSize, setDataFunc])

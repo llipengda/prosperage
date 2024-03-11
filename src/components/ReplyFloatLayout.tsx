@@ -50,7 +50,7 @@ const ReplyFloatLayout: React.FC<ReplyFloatLayoutProps> = ({
     refreshing,
     hasMore
   } = useGetByPage(REPLIES_PER_PAGE, ReplyApi.getList, true, setReplies, {
-    commentId: commentId
+    commentId: Number(commentId)
   })
 
   const updateReplies = useCommentStore(state => state.updateReplies)
