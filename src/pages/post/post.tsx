@@ -80,7 +80,7 @@ const PPost = () => {
   return (
     <View className='relative'>
       <View className='h-[406px] w-screen bg-gradient-to-b from-primary from-0%' />
-      <BackButton className='top-[214px]' />
+      <BackButton lower />
       <Post
         className='shadow-none'
         id={id}

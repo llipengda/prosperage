@@ -38,8 +38,8 @@ const Add = () => {
   return (
     <View>
       <View className='bg-gradient-to-b from-primary from-0% h-[406px] w-screen' />
-      <NavigationBarTitle className='top-[214px]' text='发帖' />
-      <BackButton className='top-[214px]' />
+      <NavigationBarTitle text='发帖' lower />
+      <BackButton lower />
       <View className='h-[568px] mx-[40px] rounded-[30px] bg-white shadow-[0_8px_24px_0_#00000040] p-[30px] text-[24px] leading-[30.48px]'>
         <Textarea
           className='h-[250px] w-full text-[24px] leading-[30.48px]'
