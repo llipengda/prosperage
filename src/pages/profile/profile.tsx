@@ -1,7 +1,7 @@
 import { View } from '@tarojs/components'
 
-const Info = () => {
+const Profile = () => {
   return <View></View>
 }
 
-export default Info
+export default Profile
