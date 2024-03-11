@@ -25,6 +25,7 @@ function Search({ className }: SearchProps) {
           src={search}
           className='w-[50px] h-[50px] mx-[20px]'
           onClick={handleSearch}
+          mode='aspectFit'
         />
         <Input
           className='w-full text-white'
@@ -36,6 +37,7 @@ function Search({ className }: SearchProps) {
           src={scan}
           className='w-[54px] h-[54px] mx-[20px]'
           onClick={handleScan}
+          mode='aspectFit'
         />
       </View>
     </View>
