@@ -23,23 +23,23 @@ const Customize = () => {
     () => [
       {
         title: '问题1',
-        text: '你多久玩一次原神？',
-        selections: ['每天', '每周', '每月', '从来不']
+        text: '问题1？',
+        selections: ['A', 'B', 'C', 'D']
       },
       {
         title: '问题2',
-        text: '你多久玩一次星铁？',
-        selections: ['每天', '每周', '每月', '从来不']
+        text: '问题2？',
+        selections: ['A', 'B', 'C', 'D']
       },
       {
         title: '问题3',
-        text: '你多久玩一次崩坏3？',
-        selections: ['每天', '每周', '每月', '从来不']
+        text: '问题3？',
+        selections: ['A', 'B', 'C', 'D']
       },
       {
         title: '问题4',
-        text: '你多久看一次烧鸡？',
-        selections: ['每天', '每周', '每月', '从来不']
+        text: '问题4？',
+        selections: ['A', 'B', 'C', 'D']
       }
     ],
     []
