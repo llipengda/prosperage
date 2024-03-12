@@ -35,8 +35,8 @@ const Profile = () => {
   return (
     <View className='relative'>
       <View className='h-[406px] w-screen bg-gradient-to-b from-primary from-0%' />
-      <BackButton lower />
       <NavigationBarTitle lower text='个人资料' />
+      <BackButton lower />
       <View className='w-screen px-[40px]'>
         <Title text='基本信息' className='mb-[40px]' />
         <SettingListItem
