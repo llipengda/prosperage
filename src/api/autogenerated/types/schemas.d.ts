@@ -67,6 +67,13 @@ export interface paths {
      */
     put: operations['handle']
   }
+  '/user/send': {
+    /**
+     * 发送手机验证码
+     * @description 发送手机验证码
+     */
+    post: operations['send']
+  }
   '/survey/section/add': {
     /**
      * 添加章节
@@ -144,6 +151,13 @@ export interface paths {
      */
     post: operations['like']
   }
+  '/images': {
+    /**
+     * 上传多张图片
+     * @description 上传多张图片
+     */
+    post: operations['uploadImages']
+  }
   '/image': {
     /**
      * 上传图片
@@ -172,6 +186,13 @@ export interface paths {
      */
     post: operations['apply']
   }
+  '/user/verify': {
+    /**
+     * 验证手机验证码
+     * @description 验证手机验证码
+     */
+    get: operations['verify']
+  }
   '/user/login': {
     /**
      * 用户登录
@@ -199,6 +220,9 @@ export interface paths {
      * @description 检查登录态
      */
     get: operations['check']
+  }
+  '/test/hello': {
+    get: operations['hello']
   }
   '/test/502': {
     get: operations['test502']
@@ -276,6 +300,9 @@ export interface paths {
      * @description 根据关键词搜索好友的帖子
      */
     get: operations['getFriendsPosts']
+  }
+  '/search/articles': {
+    get: operations['getArticles']
   }
   '/response/res': {
     /**
@@ -598,8 +625,6 @@ export interface components {
        * @description 证件有效期
        */
       documentValidDate?: string
-      /** @description 手机号 */
-      phone?: string
       /** @description 工作 */
       job?: string
       /** @description 地址 */
@@ -866,6 +891,21 @@ export interface components {
       /** @description 返回数据 */
       data?: boolean
       /** @description 信息 */
+      msg?: string
+    }
+    /** @description 通用返回结果 */
+    ResultSmsResponse: {
+      /**
+       * Format: int32
+       * @description 代码
+       */
+      code?: number
+      data?: components['schemas']['SmsResponse']
+      /** @description 信息 */
+      msg?: string
+    }
+    SmsResponse: {
+      success?: boolean
       msg?: string
     }
     /** @description 添加章节请求 */
@@ -1203,8 +1243,21 @@ export interface components {
       /**
        * Format: int32
        * @description 类型
+       *  1：帖子 2：评论 3：回复 4：文章
        */
       type?: number
+    }
+    /** @description 通用返回结果 */
+    ResultListString: {
+      /**
+       * Format: int32
+       * @description 代码
+       */
+      code?: number
+      /** @description 返回数据 */
+      data?: string[]
+      /** @description 信息 */
+      msg?: string
     }
     /** @description 通用返回结果 */
     ResultString: {
@@ -1531,6 +1584,18 @@ export interface components {
       code?: number
       /** @description 返回数据 */
       data?: components['schemas']['PostResponse'][]
+      /** @description 信息 */
+      msg?: string
+    }
+    /** @description 通用返回结果 */
+    ResultListArticleResponse: {
+      /**
+       * Format: int32
+       * @description 代码
+       */
+      code?: number
+      /** @description 返回数据 */
+      data?: components['schemas']['ArticleResponse'][]
       /** @description 信息 */
       msg?: string
     }
@@ -1890,18 +1955,6 @@ export interface components {
       /** @description 信息 */
       msg?: string
     }
-    /** @description 通用返回结果 */
-    ResultListArticleResponse: {
-      /**
-       * Format: int32
-       * @description 代码
-       */
-      code?: number
-      /** @description 返回数据 */
-      data?: components['schemas']['ArticleResponse'][]
-      /** @description 信息 */
-      msg?: string
-    }
     /** @description 联查申请添加好友信息 */
     ApplyDto: {
       /**
@@ -2184,6 +2237,32 @@ export interface operations {
       200: {
         content: {
           '*/*': components['schemas']['ResultBoolean']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          '*/*': components['schemas']['ResultObject']
+        }
+      }
+    }
+  }
+  /**
+   * 发送手机验证码
+   * @description 发送手机验证码
+   */
+  send: {
+    parameters: {
+      query: {
+        /** @description 手机号 */
+        phone: string
+      }
+    }
+    responses: {
+      /** @description 是否发送成功 */
+      200: {
+        content: {
+          '*/*': components['schemas']['ResultSmsResponse']
         }
       }
       /** @description Internal Server Error */
@@ -2481,6 +2560,34 @@ export interface operations {
     }
   }
   /**
+   * 上传多张图片
+   * @description 上传多张图片
+   */
+  uploadImages: {
+    /** @description 文件 */
+    requestBody: {
+      content: {
+        'application/json': {
+          file?: string[]
+        }
+      }
+    }
+    responses: {
+      /** @description 图片地址 */
+      200: {
+        content: {
+          '*/*': components['schemas']['ResultListString']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          '*/*': components['schemas']['ResultObject']
+        }
+      }
+    }
+  }
+  /**
    * 上传图片
    * @description 上传图片
    */
@@ -2588,6 +2695,32 @@ export interface operations {
     }
   }
   /**
+   * 验证手机验证码
+   * @description 验证手机验证码
+   */
+  verify: {
+    parameters: {
+      query: {
+        /** @description 验证码 */
+        code: string
+      }
+    }
+    responses: {
+      /** @description 是否验证成功 */
+      200: {
+        content: {
+          '*/*': components['schemas']['ResultBoolean']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          '*/*': components['schemas']['ResultObject']
+        }
+      }
+    }
+  }
+  /**
    * 用户登录
    * @description 用户登录
    */
@@ -2670,6 +2803,20 @@ export interface operations {
         content: {
           '*/*': components['schemas']['ResultBoolean']
         }
+      }
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          '*/*': components['schemas']['ResultObject']
+        }
+      }
+    }
+  }
+  hello: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: never
       }
       /** @description Internal Server Error */
       500: {
@@ -2985,6 +3132,29 @@ export interface operations {
       200: {
         content: {
           '*/*': components['schemas']['ResultListPostResponse']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          '*/*': components['schemas']['ResultObject']
+        }
+      }
+    }
+  }
+  getArticles: {
+    parameters: {
+      query: {
+        page: number
+        pageSize: number
+        keyword: string
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ResultListArticleResponse']
         }
       }
       /** @description Internal Server Error */

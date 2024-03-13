@@ -1,6 +1,26 @@
 import Taro from '@tarojs/taro'
 import { Api } from './types/api'
 
+const getArticles: Api<'/search/articles', 'GET'> = {
+  async getRes(params) {
+    return Taro.request({
+      url: `/search/articles`,
+      method: 'GET',
+      data: params.query
+    })
+  },
+  async getData(params) {
+    const res = await getArticles.getRes({
+      query: {
+        page: params.page,
+        pageSize: params.pageSize,
+        keyword: params.keyword
+      }
+    })
+    return res.data.data
+  }
+}
+
 const getFriendsPosts: Api<'/search/friendsPosts', 'GET'> = {
   async getRes(params) {
     return Taro.request({
@@ -62,6 +82,7 @@ const getUserList: Api<'/search/users', 'GET'> = {
 }
 
 const SearchApi = {
+  getArticles: getArticles.getData,
   /** 根据关键词搜索好友的帖子 */
   getFriendsPosts: getFriendsPosts.getData,
   /** 根据关键词搜索帖子 */

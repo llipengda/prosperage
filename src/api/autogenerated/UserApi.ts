@@ -68,6 +68,19 @@ const login: Api<'/user/login', 'GET'> = {
   }
 }
 
+const send: Api<'/user/send', 'POST'> = {
+  async getRes(params) {
+    return Taro.request({
+      url: `/user/send?phone=${params.query.phone}`,
+      method: 'POST'
+    })
+  },
+  async getData(params) {
+    const res = await send.getRes({ query: { phone: params.phone } })
+    return res.data.data
+  }
+}
+
 const update: Api<'/user/update', 'PUT'> = {
   async getRes(params) {
     return Taro.request({
@@ -85,12 +98,25 @@ const update: Api<'/user/update', 'PUT'> = {
         documentType: params.documentType,
         documentNumber: params.documentNumber,
         documentValidDate: params.documentValidDate,
-        phone: params.phone,
         job: params.job,
         address: params.address,
         avatar: params.avatar
       }
     })
+    return res.data.data
+  }
+}
+
+const verify: Api<'/user/verify', 'GET'> = {
+  async getRes(params) {
+    return Taro.request({
+      url: `/user/verify`,
+      method: 'GET',
+      data: params.query
+    })
+  },
+  async getData(params) {
+    const res = await verify.getRes({ query: { code: params.code } })
     return res.data.data
   }
 }
@@ -106,8 +132,12 @@ const UserApi = {
   info: info.getData,
   /** 用户登录 */
   login: login.getData,
+  /** 发送手机验证码 */
+  send: send.getData,
   /** 用户更新信息 */
-  update: update.getData
+  update: update.getData,
+  /** 验证手机验证码 */
+  verify: verify.getData
 }
 
 export default UserApi

@@ -85,6 +85,18 @@ const test502: Api<'/test/502', 'GET'> = {
   }
 }
 
+const hello: Api<'/test/hello', 'GET'> = {
+  async getRes() {
+    Taro.request({
+      url: `/test/hello`,
+      method: 'GET'
+    })
+  },
+  async getData() {
+    await hello.getRes()
+  }
+}
+
 const TestApi = {
   test200: test200.getData,
   test400: test400.getData,
@@ -92,7 +104,8 @@ const TestApi = {
   test403: test403.getData,
   test404: test404.getData,
   test500: test500.getData,
-  test502: test502.getData
+  test502: test502.getData,
+  hello: hello.getData
 }
 
 export default TestApi
