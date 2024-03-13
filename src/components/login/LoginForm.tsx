@@ -18,7 +18,7 @@ import throwError from '@/utils/throwError'
 
 type LoginFormProps = {
   onWechatLogin: () => void
-  onPhoneLogin: () => void
+  onPhoneLogin: (phone: string) => void
 }
 
 const LoginForm = ({ onWechatLogin, onPhoneLogin }: LoginFormProps) => {
@@ -53,7 +53,7 @@ const LoginForm = ({ onWechatLogin, onPhoneLogin }: LoginFormProps) => {
       await errorModal('请输入正确的电话号码')
       return
     }
-    onPhoneLogin()
+    onPhoneLogin(callingCode + phone)
   }
 
   const handleWechatLogin = async () => {
@@ -79,7 +79,7 @@ const LoginForm = ({ onWechatLogin, onPhoneLogin }: LoginFormProps) => {
               mode='selector'
               range={CALLING_CODES.map(
                 item =>
-                  `${item.chineseName}(${item.countryCode}) - ${item.phoneCode}`
+                  `${item.chineseName}(${item.countryCode}) ${item.phoneCode}`
               )}
               value={lastPickerSelected}
               onChange={handlePickerChange}

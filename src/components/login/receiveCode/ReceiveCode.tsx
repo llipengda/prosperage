@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { Input, Text, View } from '@tarojs/components'
-import notImplemented from '@/utils/notImplemented'
+import Taro from '@tarojs/taro'
+import { UserApi } from '@/api'
+import useThrottle from '@/hooks/useThrottle'
+import useLoginStore from '@/stores/loginStore'
 
 export default function ReceiveCode() {
   const [focus, setFocus] = useState(true)
@@ -28,9 +31,45 @@ export default function ReceiveCode() {
     setFocusIndex(index)
   }
 
-  const handleConfirm = notImplemented
+  const handleConfirm = async () => {
+    const res = await UserApi.verify({ phone, code })
+    if (res?.correct) {
+      Taro.showModal({
+        title: '提示',
+        content: '登录成功但是后续怎么办还没有写（）',
+        showCancel: false
+      }) // TODO login by phone
+    } else {
+      Taro.showModal({
+        title: '提示',
+        content: '验证码错误',
+        showCancel: false
+      })
+    }
+  }
 
-  const handleResend = notImplemented
+  const [resend, time] = useThrottle(UserApi.send, 300, false)
+  const phone = useLoginStore(state => state.phone)!
+
+  const handleResend = async () => {
+    if (time > 0) {
+      return
+    }
+    const res = await resend({ phone })
+    if (res?.success) {
+      Taro.showModal({
+        title: '提示',
+        content: '验证码发送成功',
+        showCancel: false
+      })
+    } else {
+      Taro.showModal({
+        title: '提示',
+        content: '验证码发送失败',
+        showCancel: false
+      })
+    }
+  }
 
   return (
     <View className='flex flex-col items-center justify-center'>
@@ -62,8 +101,11 @@ export default function ReceiveCode() {
       </View>
       <View className='mt-[40px] text-[32px] text-[#C6C6C6]'>
         没有收到验证码？
-        <Text className='text-blue-400' onClick={handleResend}>
-          重新发送
+        <Text
+          className={`${time > 0 ? 'text-[#c6c6c6]' : 'text-blue-400'}`}
+          onClick={handleResend}
+        >
+          {time > 0 ? `${time}s后` : ''}重新发送
         </Text>
       </View>
     </View>

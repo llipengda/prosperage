@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-const useThrottle = <T extends unknown[], U extends {}>(
-  fn: (...args: T) => U | Promise<U> | void,
+const useThrottle = <T extends unknown[], U>(
+  fn: (...args: T) => U,
   time: number,
   initiallyCallable = true
 ) => {

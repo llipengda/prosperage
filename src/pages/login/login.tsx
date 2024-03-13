@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import { UserApi } from '@/api'
 import Navigate from '@/components/Navigate'
 import LoginForm from '@/components/login/LoginForm'
 import Logo from '@/components/login/Logo'
@@ -41,7 +42,17 @@ export default function Login() {
     setShowLoginForm(false)
   }
 
-  const handlePhoneLogin = () => {
+  const handlePhoneLogin = async (phone: string) => {
+    const res = await UserApi.send({ phone })
+    if (!res?.success) {
+      if (phone.startsWith('+86')) {
+        await Taro.showModal({
+          title: '提示',
+          content: res?.msg || '发送验证码失败',
+          showCancel: false
+        })
+      }
+    }
     setShowLoginForm(false)
     setShowReceiveCode(true)
   }
