@@ -1,6 +1,20 @@
 import Taro from '@tarojs/taro'
 import { Api } from './types/api'
 
+const authLogin: Api<'/user/authLogin', 'GET'> = {
+  async getRes(params) {
+    return Taro.request({
+      url: `/user/authLogin`,
+      method: 'GET',
+      data: params.query
+    })
+  },
+  async getData(params) {
+    const res = await authLogin.getRes({ query: { code: params.code } })
+    return res.data.data
+  }
+}
+
 const check: Api<'/user/check', 'GET'> = {
   async getRes() {
     return Taro.request({
@@ -116,12 +130,16 @@ const verify: Api<'/user/verify', 'GET'> = {
     })
   },
   async getData(params) {
-    const res = await verify.getRes({ query: { code: params.code } })
+    const res = await verify.getRes({
+      query: { phone: params.phone, code: params.code }
+    })
     return res.data.data
   }
 }
 
 const UserApi = {
+  /** 用户手机号登录 */
+  authLogin: authLogin.getData,
   /** 检查登录态 */
   check: check.getData,
   /** 删除用户 */
@@ -130,13 +148,13 @@ const UserApi = {
   info1: info_1.getData,
   /** 获取用户信息 */
   info: info.getData,
-  /** 用户登录 */
+  /** 用户微信登录 */
   login: login.getData,
   /** 发送手机验证码 */
   send: send.getData,
   /** 用户更新信息 */
   update: update.getData,
-  /** 验证手机验证码 */
+  /** 验证手机验证码并登录 */
   verify: verify.getData
 }
 

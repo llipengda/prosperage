@@ -188,15 +188,15 @@ export interface paths {
   }
   '/user/verify': {
     /**
-     * 验证手机验证码
-     * @description 验证手机验证码
+     * 验证手机验证码并登录
+     * @description 验证手机验证码并登录
      */
     get: operations['verify']
   }
   '/user/login': {
     /**
-     * 用户登录
-     * @description 用户登录
+     * 用户微信登录
+     * @description 用户微信登录
      */
     get: operations['login']
   }
@@ -220,6 +220,13 @@ export interface paths {
      * @description 检查登录态
      */
     get: operations['check']
+  }
+  '/user/authLogin': {
+    /**
+     * 用户手机号登录
+     * @description 用户手机号登录
+     */
+    get: operations['authLogin']
   }
   '/test/hello': {
     get: operations['hello']
@@ -1448,6 +1455,29 @@ export interface components {
        * @description 用户类型
        */
       type?: number
+    }
+    /** @description 通用返回结果 */
+    ResultVerificationResponse: {
+      /**
+       * Format: int32
+       * @description 代码
+       */
+      code?: number
+      data?: components['schemas']['VerificationResponse']
+      /** @description 信息 */
+      msg?: string
+    }
+    /** @description 验证码响应 */
+    VerificationResponse: {
+      /** @description 验证码是否正确 */
+      correct?: boolean
+      /**
+       * @description 授权码，如果验证码正确则返回授权码，否则为null
+       *  用于下次登录时 传入授权码获取登录响应
+       *  授权码
+       */
+      authCode?: string
+      response?: components['schemas']['LoginResponse']
     }
     /** @description 通用返回结果 */
     ResultLoginResponse: {
@@ -2695,12 +2725,13 @@ export interface operations {
     }
   }
   /**
-   * 验证手机验证码
-   * @description 验证手机验证码
+   * 验证手机验证码并登录
+   * @description 验证手机验证码并登录
    */
   verify: {
     parameters: {
       query: {
+        phone: string
         /** @description 验证码 */
         code: string
       }
@@ -2709,7 +2740,7 @@ export interface operations {
       /** @description 是否验证成功 */
       200: {
         content: {
-          '*/*': components['schemas']['ResultBoolean']
+          '*/*': components['schemas']['ResultVerificationResponse']
         }
       }
       /** @description Internal Server Error */
@@ -2721,8 +2752,8 @@ export interface operations {
     }
   }
   /**
-   * 用户登录
-   * @description 用户登录
+   * 用户微信登录
+   * @description 用户微信登录
    */
   login: {
     parameters: {
@@ -2802,6 +2833,32 @@ export interface operations {
       200: {
         content: {
           '*/*': components['schemas']['ResultBoolean']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          '*/*': components['schemas']['ResultObject']
+        }
+      }
+    }
+  }
+  /**
+   * 用户手机号登录
+   * @description 用户手机号登录
+   */
+  authLogin: {
+    parameters: {
+      query: {
+        /** @description authCode 验证验证码的时候获取的code */
+        code: string
+      }
+    }
+    responses: {
+      /** @description 登录结果 */
+      200: {
+        content: {
+          '*/*': components['schemas']['ResultLoginResponse']
         }
       }
       /** @description Internal Server Error */
