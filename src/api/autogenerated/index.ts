@@ -3,6 +3,7 @@ import ArticleApi from './ArticleApi'
 import CommentApi from './CommentApi'
 import HelpApi from './HelpApi'
 import ImageApi from './ImageApi'
+import ImagesApi from './ImagesApi'
 import LikeApi from './LikeApi'
 import MsgApi from './MsgApi'
 import PostApi from './PostApi'
@@ -22,6 +23,7 @@ export {
   CommentApi,
   HelpApi,
   ImageApi,
+  ImagesApi,
   LikeApi,
   MsgApi,
   PostApi,
