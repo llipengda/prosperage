@@ -32,7 +32,9 @@ export default function Login() {
   Taro.useUnload(() => clearTimeout(timer))
 
   Taro.useDidHide(() => {
-    if (!showReceiveCode) return
+    if (!showReceiveCode) {
+      return
+    }
     setShowLogo(false)
     setShowLoginForm(true)
     setShowReceiveCode(false)
@@ -44,14 +46,15 @@ export default function Login() {
 
   const handlePhoneLogin = async (phone: string) => {
     const res = await UserApi.send({ phone })
-    if (!res?.success) {
-      if (phone.startsWith('+86')) {
-        await Taro.showModal({
-          title: '提示',
-          content: res?.msg || '发送验证码失败',
-          showCancel: false
-        })
-      }
+    if (!res) {
+      return
+    }
+    if (!res.success) {
+      await Taro.showModal({
+        title: '提示',
+        content: res?.msg || '发送验证码失败',
+        showCancel: false
+      })
     }
     setShowLoginForm(false)
     setShowReceiveCode(true)
