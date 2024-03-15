@@ -4,6 +4,9 @@ import Taro from '@tarojs/taro'
 import { UserApi } from '@/api'
 import useThrottle from '@/hooks/useThrottle'
 import useLoginStore from '@/stores/loginStore'
+import useTabBarStore from '@/stores/tabBarStore'
+import { redirect } from '@/utils/routeTools'
+import throwError from '@/utils/throwError'
 
 export default function ReceiveCode() {
   const [focus, setFocus] = useState(true)
@@ -31,14 +34,17 @@ export default function ReceiveCode() {
     setFocusIndex(index)
   }
 
+  const phoneLogin = useLoginStore(state => state.phoneLogin)
+  const active = useTabBarStore(state => state.active)
+
   const handleConfirm = async () => {
     const res = await UserApi.verify({ phone, code })
     if (res?.correct) {
-      Taro.showModal({
-        title: '提示',
-        content: '登录成功但是后续怎么办还没有写（）',
-        showCancel: false
-      }) // TODO login by phone
+      phoneLogin(
+        res.response?.token ?? throwError('No token returned'),
+        res.authCode ?? throwError('No authCode returned')
+      )
+      redirect(`/pages/index/index?tab=${active}`)
     } else {
       Taro.showModal({
         title: '提示',
@@ -48,7 +54,7 @@ export default function ReceiveCode() {
     }
   }
 
-  const [resend, time] = useThrottle(UserApi.send, 300, false)
+  const [resend, time] = useThrottle(UserApi.send, 60, false)
   const phone = useLoginStore(state => state.phone)!
 
   const handleResend = async () => {

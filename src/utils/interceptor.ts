@@ -21,7 +21,22 @@ const interceptor: Taro.interceptor = async chain => {
         /** token 过期 */
         (res.statusCode === 200 && res.data.code === 4010)
       ) {
-        console.log('token 错误或已过期')
+        console.warn('token 错误或已过期')
+        if (useLoginStore.getState().usePhoneLogin) {
+          const code = useLoginStore.getState().authCode
+          if (!code) {
+            Taro.reLaunch({ url: '/pages/login/login' })
+            return res
+          }
+          const { token } = await UserApi.authLogin({ code })
+          if (!token) {
+            useLoginStore.getState().removeToken()
+            Taro.reLaunch({ url: '/pages/login/login' })
+            return res
+          }
+          useLoginStore.getState().setToken(token)
+          return Taro.request(requestParams)
+        }
         const { token } = await UserApi.login()
         if (!token) {
           useLoginStore.getState().removeToken()
