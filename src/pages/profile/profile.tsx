@@ -6,8 +6,20 @@ import SettingListItem from '@/components/profile/SettingListItem'
 import useUserStore from '@/stores/userStore'
 import getDocumentType from '@/utils/getDocumentType'
 import getGender from '@/utils/getGender'
-import notImplemented from '@/utils/notImplemented'
 import orNotSet from '@/utils/orNotSet'
+import { navigate } from '@/utils/routeTools'
+
+export type ModifyType =
+  | 'name'
+  | 'avatar'
+  | 'phone'
+  | 'gender'
+  | 'nationality'
+  | 'documentType'
+  | 'documentNumber'
+  | 'documentValidDate'
+  | 'job'
+  | 'address'
 
 const Profile = () => {
   const {
@@ -32,6 +44,9 @@ const Profile = () => {
     address: state.address
   }))
 
+  const navigateTo = (type: ModifyType) => () =>
+    navigate(`/pages/profile/modify/modify?type=${type}`)
+
   return (
     <View className='relative'>
       <View className='h-[406px] w-screen bg-gradient-to-b from-primary from-0%' />
@@ -42,48 +57,48 @@ const Profile = () => {
         <SettingListItem
           text='名字'
           value={orNotSet(name)}
-          onClick={notImplemented}
+          onClick={navigateTo('name')}
         />
         <SettingListItem
           text='性别'
           value={getGender(gender)}
-          onClick={notImplemented}
+          onClick={navigateTo('gender')}
         />
         <SettingListItem
           text='国籍'
           value={orNotSet(nationality)}
-          onClick={notImplemented}
+          onClick={navigateTo('nationality')}
         />
         <SettingListItem
           text='证件类型'
           value={getDocumentType(documentType)}
-          onClick={notImplemented}
+          onClick={navigateTo('documentType')}
         />
         <SettingListItem
           text='证件号码'
           value={orNotSet(documentNumber)}
-          onClick={notImplemented}
+          onClick={navigateTo('documentNumber')}
         />
         <SettingListItem
           text='证件有效期'
           value={orNotSet(documentValidDate)}
-          onClick={notImplemented}
+          onClick={navigateTo('documentValidDate')}
         />
         <Title text='补充信息' className='mb-[40px] mt-[60px]' />
         <SettingListItem
           text='电话号码'
           value={orNotSet(phoneNumber)}
-          onClick={notImplemented}
+          onClick={navigateTo('phone')}
         />
         <SettingListItem
           text='职业'
           value={orNotSet(job)}
-          onClick={notImplemented}
+          onClick={navigateTo('job')}
         />
         <SettingListItem
           text='联系地址'
           value={orNotSet(address)}
-          onClick={notImplemented}
+          onClick={navigateTo('address')}
         />
       </View>
     </View>

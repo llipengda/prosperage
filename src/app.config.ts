@@ -6,7 +6,8 @@ const pages = [
   'pages/error/error',
   'pages/post/post',
   'pages/post/add/add',
-  'pages/profile/profile'
+  'pages/profile/profile',
+  'pages/profile/modify/modify'
 ] as const
 
 export type Page = (typeof pages)[number]
