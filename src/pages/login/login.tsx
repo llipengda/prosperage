@@ -45,7 +45,9 @@ export default function Login() {
   }
 
   const handlePhoneLogin = async (phone: string) => {
+    Taro.showLoading({ title: '请稍候' })
     const res = await UserApi.send({ phone })
+    Taro.hideLoading()
     if (!res) {
       return
     }
