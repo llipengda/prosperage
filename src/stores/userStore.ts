@@ -7,6 +7,7 @@ import logger from '@/utils/logMiddleware'
 type UserStore = TUser & {
   setInfo: (info: TUser) => void
   logout: () => void
+  update: (info: Partial<TUser>) => void
 }
 
 const initUser: TUser = {
@@ -34,7 +35,8 @@ const useUserStore = create<UserStore>()(
       set => ({
         ...initUser,
         setInfo: info => set(info),
-        logout: () => set(initUser)
+        logout: () => set(initUser),
+        update: info => set(state => ({ ...state, ...info }))
       }),
       'userStore'
     ),

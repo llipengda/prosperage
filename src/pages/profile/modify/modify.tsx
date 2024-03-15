@@ -1,21 +1,40 @@
 import { View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import { VALIDATED_DOCUMENT_TYPES } from '@/common/constants'
+import settingsTitleMap, { type ModifyType } from '@/common/settingsTitleMap'
 import BackButton from '@/components/BackButton'
 import NavigationBarTitle from '@/components/NavigationBarTitle'
-import type { ModifyType } from '@/pages/profile/profile'
+import SingleInputSetting from '@/components/profile/SingleInputSetting'
+import SinglePickerSetting from '@/components/profile/SinglePickerSetting'
 
-const titleMap = {
-  name: '修改名字',
-  avatar: '修改头像',
-  nationality: '修改国籍',
-  documentType: '修改证件类型',
-  documentNumber: '修改证件号码',
-  documentValidDate: '修改证件有效期',
-  job: '修改职业',
-  address: '修改地址',
-  phone: '修改手机号',
-  gender: '修改性别'
-} satisfies Record<ModifyType, string>
+const Setting = ({ type }: { type: ModifyType }) => {
+  switch (type) {
+    case 'gender':
+      return (
+        <SinglePickerSetting
+          type={type}
+          range={['未设置', '男', '女', '其它']}
+        />
+      )
+    case 'documentType':
+      return (
+        <SinglePickerSetting
+          type={type}
+          range={['未设置'].concat(VALIDATED_DOCUMENT_TYPES)}
+        />
+      )
+    case 'nation':
+      return (
+        <SinglePickerSetting
+          type={type}
+          range={['未设置', '中华人民共和国', '其它']}
+        />
+      )
+
+    default:
+      return <SingleInputSetting type={type} />
+  }
+}
 
 const modify = () => {
   const type = (Taro.getCurrentInstance().router?.params.type ||
@@ -24,9 +43,11 @@ const modify = () => {
   return (
     <View>
       <View className='w-screen bg-primary h-[326px]' />
-      <BackButton lower />
-      <NavigationBarTitle lower text={titleMap[type]} />
-      <View>{type}</View>
+      <BackButton lower text='取消' />
+      <NavigationBarTitle lower text={settingsTitleMap[type]} />
+      <View className='pt-[50px]'>
+        <Setting type={type} />
+      </View>
     </View>
   )
 }

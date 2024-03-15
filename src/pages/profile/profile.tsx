@@ -1,4 +1,5 @@
 import { View } from '@tarojs/components'
+import type { ModifyType } from '@/common/settingsTitleMap'
 import BackButton from '@/components/BackButton'
 import NavigationBarTitle from '@/components/NavigationBarTitle'
 import Title from '@/components/Title'
@@ -8,18 +9,6 @@ import getDocumentType from '@/utils/getDocumentType'
 import getGender from '@/utils/getGender'
 import orNotSet from '@/utils/orNotSet'
 import { navigate } from '@/utils/routeTools'
-
-export type ModifyType =
-  | 'name'
-  | 'avatar'
-  | 'phone'
-  | 'gender'
-  | 'nationality'
-  | 'documentType'
-  | 'documentNumber'
-  | 'documentValidDate'
-  | 'job'
-  | 'address'
 
 const Profile = () => {
   const {
@@ -67,7 +56,7 @@ const Profile = () => {
         <SettingListItem
           text='国籍'
           value={orNotSet(nationality)}
-          onClick={navigateTo('nationality')}
+          onClick={navigateTo('nation')}
         />
         <SettingListItem
           text='证件类型'

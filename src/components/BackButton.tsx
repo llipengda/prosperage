@@ -1,18 +1,31 @@
-import { Image } from '@tarojs/components'
+import { Image, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import arrowLeft from '@/assets/arrow_left.svg'
 
 type BackButtonProps = {
   className?: string
   lower?: boolean
+  text?: string
 }
 
 const BackButton: React.FC<BackButtonProps> = ({
   className,
+  text,
   lower = false
 }) => {
   if (Taro.getCurrentPages().length <= 1) {
     return <></>
+  }
+
+  if (text) {
+    return (
+      <View
+        className={`text-white text-[32px] leading-[40.64px] fixed left-[40px] z-[100] ${lower ? 'top-[219px]' : 'top-[145px]'} ${className}`}
+        onClick={() => Taro.navigateBack()}
+      >
+        {text}
+      </View>
+    )
   }
 
   return (
