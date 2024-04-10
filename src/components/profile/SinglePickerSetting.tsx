@@ -19,7 +19,7 @@ const SinglePickerSetting: React.FC<SinglePickerSettingProps> = ({
 }) => {
   const initialValue = Number(useUserStore(state => state[type])) || 0
 
-  const [value, setValue] = useState(initialValue)
+  const [value, setValue] = useState(initialValue as string | number)
 
   const update = useUserStore(state => state.update)
 
@@ -33,7 +33,12 @@ const SinglePickerSetting: React.FC<SinglePickerSettingProps> = ({
 
   return (
     <View>
-      <SettingPicker value={value} range={range} onChange={setValue} />
+      <SettingPicker
+        value={value}
+        range={range}
+        onChange={setValue}
+        mode='selector'
+      />
       <TextButton
         className='absolute bottom-[216px] left-1/2 -translate-x-[50%]'
         text='完成'

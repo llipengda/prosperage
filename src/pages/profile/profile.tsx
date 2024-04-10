@@ -9,6 +9,7 @@ import getDocumentType from '@/utils/getDocumentType'
 import getGender from '@/utils/getGender'
 import orNotSet from '@/utils/orNotSet'
 import { navigate } from '@/utils/routeTools'
+import { getNationality } from '@/utils/getNationality'
 
 const Profile = () => {
   const {
@@ -55,7 +56,7 @@ const Profile = () => {
         />
         <SettingListItem
           text='国籍'
-          value={orNotSet(nationality)}
+          value={getNationality(nationality)}
           onClick={navigateTo('nation')}
         />
         <SettingListItem

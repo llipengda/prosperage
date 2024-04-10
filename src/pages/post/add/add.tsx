@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Image, Text, Textarea, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { ImageApi, PostApi } from '@/api'
+import { ImageApi, PostApi, SuggestionApi } from '@/api'
 import imageIcon from '@/assets/image.svg'
 import BackButton from '@/components/BackButton'
 import NavigationBarTitle from '@/components/NavigationBarTitle'
@@ -11,6 +11,8 @@ import type TPost from '@/types/Post'
 import sleep from '@/utils/sleep'
 
 const Add = () => {
+  const type = Taro.getCurrentInstance().router?.params.type || 'post'
+
   const [value, setValue] = useState('')
   const [image, setImage] = useState<string | undefined>(undefined)
 
@@ -28,6 +30,17 @@ const Add = () => {
   const setPosts = usePostStore(state => state.setPosts)
 
   const handleSendPost = async () => {
+    if (type === 'feedback') {
+      await SuggestionApi.addSuggestion({ content: value, image })
+      await Taro.showToast({
+        title: '反馈成功',
+        icon: 'success',
+        duration: 800
+      })
+      await sleep(800)
+      Taro.navigateBack()
+      return
+    }
     const post = await PostApi.addPost({ content: value, image })
     await Taro.showToast({ title: '发送成功', icon: 'success', duration: 800 })
     await sleep(800)
@@ -38,7 +51,10 @@ const Add = () => {
   return (
     <View>
       <View className='bg-gradient-to-b from-primary from-0% h-[406px] w-screen' />
-      <NavigationBarTitle text='发帖' lower />
+      <NavigationBarTitle
+        text={type === 'feedback' ? '意见反馈' : '发帖'}
+        lower
+      />
       <BackButton lower />
       <View className='h-[568px] mx-[40px] rounded-[30px] bg-white shadow-[0_8px_24px_0_#00000040] p-[30px] text-[24px] leading-[30.48px]'>
         <Textarea

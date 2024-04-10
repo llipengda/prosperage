@@ -2,6 +2,7 @@ const pages = [
   'pages/login/login',
   'pages/login/code/code',
   'pages/index/index',
+  'pages/index/me/rights/rights',
   'pages/customize/customize',
   'pages/error/error',
   'pages/post/post',

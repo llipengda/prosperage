@@ -13,8 +13,6 @@ export default function Me() {
     verified: state.isVerified
   }))
 
-  const handleClickManageProfile = () => navigate('/pages/profile/profile')
-
   const handleClickContactUs = notImplemented
 
   return (
@@ -39,18 +37,18 @@ export default function Me() {
       <SettingButton
         className='mt-[48px]'
         text='管理个人资料'
-        onClick={handleClickManageProfile}
+        onClick={() => navigate('/pages/profile/profile')}
       />
       <Title className='mx-[40px] mt-[56px]' text='实用工具' />
       <SettingButton
         className='mt-[52px]'
         text='消费者权益保护'
-        onClick={notImplemented}
+        onClick={() => navigate('/pages/index/me/rights/rights')}
       />
       <SettingButton
         className='mt-[12px]'
         text='意见反馈'
-        onClick={notImplemented}
+        onClick={() => navigate('/pages/post/add/add?type=feedback')}
       />
       <SettingButton
         className='mt-[12px]'

@@ -627,10 +627,7 @@ export interface components {
       documentType?: number
       /** @description 证件号码 */
       documentNumber?: string
-      /**
-       * Format: date-time
-       * @description 证件有效期
-       */
+      /** @description 证件有效期 */
       documentValidDate?: string
       /** @description 工作 */
       job?: string
@@ -692,10 +689,7 @@ export interface components {
       documentType?: number
       /** @description 证件号码 */
       documentNumber?: string
-      /**
-       * Format: date-time
-       * @description 证件有效期
-       */
+      /** @description 证件有效期 */
       documentValidDate?: string
       /** @description 手机号 */
       phone?: string

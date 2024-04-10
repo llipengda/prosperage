@@ -6,6 +6,7 @@ import BackButton from '@/components/BackButton'
 import NavigationBarTitle from '@/components/NavigationBarTitle'
 import SingleInputSetting from '@/components/profile/SingleInputSetting'
 import SinglePickerSetting from '@/components/profile/SinglePickerSetting'
+import ValidDateSetting from '@/components/profile/ValidDateSetting'
 
 const Setting = ({ type }: { type: ModifyType }) => {
   switch (type) {
@@ -30,6 +31,8 @@ const Setting = ({ type }: { type: ModifyType }) => {
           range={['未设置', '中华人民共和国', '其它']}
         />
       )
+    case 'documentValidDate':
+      return <ValidDateSetting />
 
     default:
       return <SingleInputSetting type={type} />

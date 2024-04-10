@@ -111,8 +111,8 @@ const PPost = () => {
             postId={id}
             key={comment.id}
             className='mx-[48px] mb-[20px]'
-            avatar={DEFAULT_AVATAR}
-            userName={DEFAULT_NAME}
+            avatar={comment.avatar || DEFAULT_AVATAR}
+            userName={comment.name || DEFAULT_NAME}
             content={comment.content}
             time={comment.createTime}
             shares={comment.shares}
