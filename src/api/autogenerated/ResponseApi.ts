@@ -11,7 +11,11 @@ const doResponse: Api<'/response/do', 'POST'> = {
   },
   async getData(params) {
     const res = await doResponse.getRes({
-      body: { issueId: params.issueId, optionId: params.optionId }
+      body: {
+        issueId: params.issueId,
+        optionId: params.optionId,
+        answer: params.answer
+      }
     })
     return res.data.data
   }

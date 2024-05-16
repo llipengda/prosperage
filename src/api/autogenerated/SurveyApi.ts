@@ -56,6 +56,7 @@ const addIssue: Api<'/survey/issue/add', 'POST'> = {
       body: {
         sectionId: params.sectionId,
         content: params.content,
+        type: params.type,
         weight: params.weight
       }
     })

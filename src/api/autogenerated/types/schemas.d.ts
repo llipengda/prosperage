@@ -861,6 +861,11 @@ export interface components {
       /** @description 问题内容 */
       content?: string
       /**
+       * Format: int32
+       * @description 问题类型
+       */
+      type?: number
+      /**
        * Format: int64
        * @description 问题选项数
        */
@@ -945,6 +950,13 @@ export interface components {
       sectionId?: number
       /** @description 问题内容 */
       content?: string
+      /**
+       * Format: int32
+       * @description 问题类型
+       *  1：选择
+       *  2：填空
+       */
+      type?: number
       /**
        * Format: double
        * @description 权重
@@ -1037,6 +1049,8 @@ export interface components {
        * @description 选项 ID
        */
       optionId?: number
+      /** @description 答案 */
+      answer?: string
     }
     /** @description 用户回答题目信息 */
     IssueData: {
@@ -1060,6 +1074,8 @@ export interface components {
        * @description 选项 ID
        */
       optionId?: number
+      /** @description 回答内容 */
+      answer?: string
     }
     /** @description 通用返回结果 */
     ResultIssueData: {
@@ -1707,6 +1723,11 @@ export interface components {
       serial?: number
       /** @description 问题内容 */
       content?: string
+      /**
+       * Format: int32
+       * @description 问题类型
+       */
+      type?: number
       /**
        * Format: int64
        * @description 问题选项数
